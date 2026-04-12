@@ -5,7 +5,19 @@
       "Bash(python3)",
       "Bash(ls -lt /Users/michalmatlosz/Downloads/*.png)",
       "Bash(python3 -c ':*)",
-      "Bash(sips -s format png \"/Users/michalmatlosz/Downloads/IMG_1473.HEIC\" --out /tmp/div_example.png)"
+      "Bash(sips -s format png \"/Users/michalmatlosz/Downloads/IMG_1473.HEIC\" --out /tmp/div_example.png)",
+      "Bash(gh repo:*)",
+      "Bash(brew install:*)",
+      "Bash(gh --version)",
+      "Bash(brew list:*)",
+      "Read(//usr/local/bin/**)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(sudo chown:*)",
+      "Bash(sudo chmod:*)",
+      "Bash(gh auth:*)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
+      "Bash(gh run:*)",
+      "Bash(sips -s format png \"/Users/michalmatlosz/Downloads/IMG_1477.HEIC\" --out /tmp/fractions_fig.png)"
     ]
   }
 }
