@@ -199,8 +199,10 @@ body {
 
 .battle-stage {
   position: relative;
-  min-height: 340px;
-  margin-bottom: 14px;
+  min-height: 320px;
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, #080818 0%, #050510 60%, #0a0a1a 100%);
+  border: 4px solid #ffffff;
 }
 
 .battle-platform {
@@ -361,22 +363,22 @@ body {
 }
 
 .battle-bottom {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  display: flex;
+  flex-direction: column;
   gap: 0;
 }
 
 .battle-box {
   background: #050505;
   border: 4px solid #ffffff;
-  min-height: 160px;
+  min-height: 0;
   padding: 16px 18px;
 }
 
 .battle-message-box {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  border-bottom: none;
 }
 
 .battle-prompt {
@@ -384,13 +386,15 @@ body {
   font-size: 14px;
   color: #ffffff;
   line-height: 1.7;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
+  text-align: center;
 }
 
 .battle-command-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border-top: none;
 }
 
 .challenge-question {
@@ -616,12 +620,14 @@ body {
 /* ─── IMMUNITY BADGE ─── */
 .immune-badge {
   font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
+  font-size: 6px;
   color: #ff6666;
-  background: rgba(255,0,0,0.15);
-  padding: 3px 6px;
-  border-radius: 3px;
+  background: rgba(255,0,0,0.2);
+  padding: 2px 4px;
+  border-radius: 2px;
   margin-top: 4px;
+  display: block;
+  text-align: center;
 }
 
 .monster-immune-info {
@@ -930,55 +936,57 @@ body {
 /* ─── ATTACK CHOICE ─── */
 #attack-choice {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 6px;
   width: 100%;
 }
 
 .attack-choice-btn {
   font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
-  padding: 16px 14px;
+  font-size: 10px;
+  padding: 14px 10px;
   border-radius: 0;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   width: 100%;
-  text-align: left;
-  line-height: 1.6;
-  border: 4px solid #201628;
-  box-shadow: inset -4px -4px 0 rgba(0,0,0,0.12);
+  text-align: center;
+  line-height: 1.5;
+  border: 3px solid;
+  position: relative;
 }
 
-.attack-choice-btn:hover {
-  transform: translate(-2px, -2px);
-  filter: brightness(1.03);
+.attack-choice-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
 }
 
 .attack-easy {
-  background: #111111;
-  color: #ffffff;
-  border-color: #ffffff;
+  background: linear-gradient(180deg, #0a1a0a 0%, #050f05 100%);
+  color: #88ff88;
+  border-color: #44aa44;
 }
 
 .attack-medium {
-  background: #111111;
-  color: #ffffff;
-  border-color: #ffffff;
+  background: linear-gradient(180deg, #1a1a0a 0%, #0f0f05 100%);
+  color: #ffdd66;
+  border-color: #aa8833;
 }
 
 .attack-hard {
-  background: #111111;
-  color: #ffffff;
-  border-color: #ffffff;
+  background: linear-gradient(180deg, #1a0a0a 0%, #0f0505 100%);
+  color: #ff8888;
+  border-color: #aa4444;
 }
 
 .dmg-badge {
-  display: inline-block;
-  font-size: 9px;
-  padding: 2px 6px;
+  display: block;
+  font-size: 8px;
+  padding: 3px 0;
   border-radius: 0;
   margin-top: 6px;
-  background: rgba(255,255,255,0.12);
+  color: inherit;
+  opacity: 0.7;
 }
 
 #potion-battle-btn {
@@ -986,13 +994,13 @@ body {
 }
 
 .attack-choice-btn.potion-btn {
-  background: #111111;
-  color: #ffffff;
-  border-color: #ffffff;
+  background: linear-gradient(180deg, #0a0a1a 0%, #05050f 100%);
+  color: #88aaff;
+  border-color: #4466aa;
 }
 
 .attack-choice-btn.potion-btn:disabled {
-  opacity: 0.35;
+  opacity: 0.25;
   cursor: not-allowed;
 }
 
@@ -1000,9 +1008,10 @@ body {
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   min-height: 24px;
-  margin-top: 12px;
+  margin-top: 10px;
   transition: all 0.3s;
   color: #ffffff;
+  text-align: center;
 }
 
 #challenge-panel .answer-input {
@@ -1777,9 +1786,13 @@ body {
   .monster-emoji { font-size: 48px; }
   .monster-sprite { max-width: 72px !important; }
   .monster-name { font-size: 10px; }
-  .battle-bottom { grid-template-columns: 1fr; }
   .battle-box { min-height: 0; padding: 12px; }
   .battle-prompt { font-size: 10px; }
+
+  #attack-choice {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
 
   .challenge-question, .quest-question { padding: 14px 12px; margin: 12px 0; }
   .question-text { font-size: 17px; }
@@ -1804,14 +1817,10 @@ body {
 
   .attack-btn { font-size: 11px; padding: 12px 18px; }
 
-  #attack-choice {
-    gap: 8px;
-    grid-template-columns: 1fr;
-  }
   .attack-choice-btn {
-    font-size: 10px;
-    padding: 12px 14px;
-    line-height: 1.5;
+    font-size: 9px;
+    padding: 10px 8px;
+    line-height: 1.4;
   }
 
   .feedback-text { font-size: 10px; }
@@ -1871,7 +1880,7 @@ body {
   .hud-left, .hud-right { gap: 5px; }
   #game-area { height: calc(100vh - 40px); margin-top: 40px; }
   .challenge-box, .quest-box { padding: 12px 10px; }
-  .attack-choice-btn { font-size: 9px; padding: 10px 12px; }
+  .attack-choice-btn { font-size: 8px; padding: 8px 6px; }
 }
 
 /* ─── ACHIEVEMENTS PANEL ─── */
@@ -2348,8 +2357,24 @@ body {
       <div class="battle-box battle-message-box">
         <div class="battle-prompt" id="battle-prompt">Co zrobi bohater?</div>
 
+        <!-- ATTACK CHOICE (phase 1) -->
+        <div id="attack-choice">
+          <button class="attack-choice-btn battle-attack-btn attack-easy" onclick="Battle.chooseAttack('easy')">
+            ⚔️ Lekki<br><span class="dmg-badge" id="easy-dmg-label">1 DMG</span>
+          </button>
+          <button class="attack-choice-btn battle-attack-btn attack-medium" onclick="Battle.chooseAttack('medium')">
+            🗡️ Mocny<br><span class="dmg-badge" id="medium-dmg-label">2 DMG</span>
+          </button>
+          <button class="attack-choice-btn battle-attack-btn attack-hard" onclick="Battle.chooseAttack('hard')" id="attack-hard-btn">
+            💥 Potężny<br><span class="dmg-badge" id="hard-dmg-label">3 DMG</span>
+          </button>
+          <button class="attack-choice-btn potion-btn" onclick="Battle.usePotion()" id="potion-battle-btn">
+            🧪 Mikstura<br><span class="dmg-badge" id="potion-count-battle">(0)</span>
+          </button>
+        </div>
+
         <!-- TASK PREVIEW (boots lvl 3) -->
-        <div id="task-preview" style="display:none; background:#050505; border:4px solid #ffffff; padding:10px 12px; margin-bottom:10px;">
+        <div id="task-preview" style="display:none; background:#050505; border:4px solid #ffffff; padding:10px 12px; margin-top:10px;">
           <div style="font-family:'Press Start 2P',monospace; font-size:8px; color:#ffffff; margin-bottom:6px;">PODGLĄD ATAKÓW</div>
           <div id="task-preview-text" style="font-size:13px; color:#ffffff; white-space:pre-line; line-height:1.6;"></div>
         </div>
@@ -2366,24 +2391,6 @@ body {
         </div>
 
         <div class="feedback-text" id="feedback-text"></div>
-      </div>
-
-      <div class="battle-box battle-command-box">
-        <!-- ATTACK CHOICE (phase 1) -->
-        <div id="attack-choice">
-          <button class="attack-choice-btn battle-attack-btn attack-easy" onclick="Battle.chooseAttack('easy')">
-            ▶ Lekki atak<br><span class="dmg-badge" id="easy-dmg-label">1 DMG</span>
-          </button>
-          <button class="attack-choice-btn battle-attack-btn attack-medium" onclick="Battle.chooseAttack('medium')">
-            ▶ Mocny atak<br><span class="dmg-badge" id="medium-dmg-label">2 DMG</span>
-          </button>
-          <button class="attack-choice-btn battle-attack-btn attack-hard" onclick="Battle.chooseAttack('hard')" id="attack-hard-btn">
-            ▶ Potężny atak<br><span class="dmg-badge" id="hard-dmg-label">3 DMG</span>
-          </button>
-          <button class="attack-choice-btn potion-btn" onclick="Battle.usePotion()" id="potion-battle-btn">
-            ▶ Mikstura<br><span class="dmg-badge" id="potion-count-battle">(0)</span>
-          </button>
-        </div>
       </div>
     </div>
   </div>
