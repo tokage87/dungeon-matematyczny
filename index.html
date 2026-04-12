@@ -414,6 +414,24 @@ body {
   background: linear-gradient(180deg, #3a9a3a 0%, #2a6a2a 100%) !important;
 }
 
+/* ─── IMMUNITY BADGE ─── */
+.immune-badge {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #ff6666;
+  background: rgba(255,0,0,0.15);
+  padding: 3px 6px;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+
+.monster-immune-info {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #ff8888;
+  margin-top: 6px;
+}
+
 /* ─── WRITTEN DIVISION ─── */
 .div-grid {
   display: inline-block;
@@ -1713,332 +1731,260 @@ body {
 //  DUNGEON MATEMATYCZNY — GAME ENGINE
 // ═══════════════════════════════════════════
 
-// ─── SPRITE SYSTEM (PNG images) ───
+// ─── SPRITE SYSTEM (pixel-art canvas) ───
 const PixelArt = {
-  imageCache: {},
-  _loading: {},
-
-  // Preload all images
-  preload() {
-    const names = [
-      'bat','spider','rat','ghost',
-      'skeleton','zombie','ogre','snake',
-      'wizard','demon','scorpion','werewolf'
-    ];
-    for (const name of names) {
-      this.getImage(name);
-    }
-  },
-
-  getImage(spriteName) {
-    // Boss aliases — map to closest available sprite
-    const aliases = { dragon: 'demon', golem: 'ogre', overlord: 'wizard' };
-    const fileName = aliases[spriteName] || spriteName;
-
-    if (this.imageCache[fileName]) return this.imageCache[fileName];
-    if (this._loading[fileName]) return null;
-
-    this._loading[fileName] = true;
-    const img = new Image();
-    img.src = `img/${fileName}.png`;
-    img.onload = () => {
-      this.imageCache[fileName] = img;
-      delete this._loading[fileName];
-      // Re-render map when image loads
-      if (DungeonMap.ctx) DungeonMap.render();
-    };
-    return null;
-  },
-
-  // Draw sprite on canvas context at position — for map rooms
-  draw(spriteName, size) {
-    const aliases = { dragon: 'demon', golem: 'ogre', overlord: 'wizard' };
-    const fileName = aliases[spriteName] || spriteName;
-    const img = this.imageCache[fileName];
-    if (!img) {
-      this.getImage(spriteName);
-      return null;
-    }
-    // Return a small canvas with the image scaled
-    const c = document.createElement('canvas');
-    const scale = size / Math.max(img.width, img.height);
-    c.width = Math.round(img.width * scale);
-    c.height = Math.round(img.height * scale);
-    const ctx = c.getContext('2d');
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(img, 0, 0, c.width, c.height);
-    return c;
-  },
-
-  // Get data URL for battle display
-  toDataURL(spriteName, size) {
-    const c = this.draw(spriteName, size || 96);
-    return c ? c.toDataURL() : null;
-  },
-
-  // Get image URL directly for <img> tags
-  getImgSrc(spriteName) {
-    const aliases = { dragon: 'demon', golem: 'ogre', overlord: 'wizard' };
-    const fileName = aliases[spriteName] || spriteName;
-    return `img/${fileName}.png`;
-  },
-
-  // LEGACY — keep old sprites object empty so nothing crashes
-  _legacy: true,
   sprites: {
     bat: {
       pixels: [
-        '............',
-        '.aa....aa...',
-        'abba..abba..',
-        'abbba.abbba.',
-        '.abbbbabbba.',
-        '..abbbbbba..',
-        '...abbbba...',
-        '....abba....',
-        '...ab..ba...',
-        '..ab....ba..',
-        '............',
-        '............',
+        '..cc............cc..',
+        '.cddc..........cddc.',
+        'cddddcc....ccddddc.',
+        'cddddddc..cddddddcc',
+        '.cddddddccddddddc..',
+        '..cddddddddddddc...',
+        '...cdddddddddddc...',
+        '....cdddeeedddc....',
+        '....cdddeffeddc....',
+        '.....cddeeedddc....',
+        '......cdddddc......',
+        '.......cdddc.......',
+        '........cdc........',
+        '.........c.........',
       ],
-      palette: { a: '#6a2fa0', b: '#9944cc' }
+      palette: { c: '#4a3060', d: '#7744aa', e: '#2a1a3a', f: '#ff3333' }
     },
     spider: {
       pixels: [
-        'a..........a',
-        '.a........a.',
-        '..a..aa..a..',
-        'a..aabbaa..a',
-        '.a.abbbba.a.',
-        '..aabbbbaa..',
-        '..aabbbbaa..',
-        '.a.abbbba.a.',
-        'a..aa..aa..a',
-        '..a......a..',
-        '.a........a.',
-        'a..........a',
+        'a................a',
+        '.a..............a.',
+        '..a....aa....a...',
+        '...a.aabbaa.a....',
+        'a...aabbbbaa...a.',
+        '.a..abbbbbba..a..',
+        '..a.abbbbbba.a...',
+        '...aabbbbbba.....',
+        '..a..abbbba..a...',
+        '.a....abba....a..',
+        'a......aa......a.',
       ],
-      palette: { a: '#333333', b: '#8b0000' }
+      palette: { a: '#3a3a3a', b: '#8b0000' }
     },
     rat: {
       pixels: [
-        '............',
-        '..aa...aa...',
-        '.abba.abba..',
-        '.abbaaaabba.',
-        '..abbbbbba..',
-        '..cbbbbbbc..',
-        '..abbbbbba..',
-        '...abbbba...',
-        '....abba....',
-        '.....ab.....',
-        '......bbbbb.',
-        '............',
+        '......aa..aa......',
+        '.....abba.abba....',
+        '....abbbaabbba....',
+        '....abbbbbbbba....',
+        '...ccbbbbbbbbcc...',
+        '...abbbbbbbbbba...',
+        '....abbbbbbbba....',
+        '.....abbbbbba.....',
+        '......abbbba......',
+        '.......abba.......',
+        '........abbbbbbb..',
       ],
-      palette: { a: '#5a4a3a', b: '#7a6a5a', c: '#ff3333' }
+      palette: { a: '#5a4a3a', b: '#8a7a6a', c: '#ff3333' }
     },
     ghost: {
       pixels: [
-        '....aaaa....',
-        '..aabbbbaa..',
-        '.aabbbbbbaa.',
-        '.abccbbccba.',
-        '.abccbbccba.',
-        '.aabbbbbbaa.',
-        '.aabbbbbbaa.',
-        '.aabbbbbbaa.',
-        '.aabbbbbbaa.',
-        '.ab.abba.ba.',
-        '.a..a..a..a.',
-        '............',
+        '.....aaaaaa.....',
+        '...aabbbbbbaa...',
+        '..aabbbbbbbbaa..',
+        '.aabccbbbbccbaa.',
+        '.aabccbbbbccbaa.',
+        '.aabbbbbbbbbbaa.',
+        '.aabbbbbbbbbbaa.',
+        '.aabbbbbbbbbbaa.',
+        '.aabbbbbbbbbbaa.',
+        '.ab..abba..bba..',
+        '.a....aa....aa..',
       ],
-      palette: { a: '#8888cc', b: '#bbbbee', c: '#222244' }
+      palette: { a: '#7777bb', b: '#bbbbee', c: '#222244' }
     },
     skeleton: {
       pixels: [
-        '...aaaaaa...',
-        '..abbbbbba..',
-        '..bcbbbbcb..',
-        '..abbbbbba..',
-        '...abccba...',
-        '....abba....',
-        '..ddbbbdd...',
-        '....abba....',
-        '...abbbba...',
-        '....abba....',
-        '...ab..ba...',
-        '..ab....ba..',
+        '....aaaaaaaa....',
+        '...abbbbbbbba...',
+        '...bcbbbbbbcb...',
+        '...abbbbbbbba...',
+        '....abbccbba....',
+        '.....aabbaa.....',
+        '...dddbbbbbdd...',
+        '.....aabbaa.....',
+        '....abbbbbba....',
+        '.....aabbaa.....',
+        '....ab....ba....',
+        '...ab......ba...',
       ],
-      palette: { a: '#aaaaaa', b: '#eeeeee', c: '#222222', d: '#888888' }
+      palette: { a: '#aaaaaa', b: '#eeeeee', c: '#222222', d: '#777777' }
     },
     zombie: {
       pixels: [
-        '...aaaaaa...',
-        '..abbbbbba..',
-        '.abcbbbbcba.',
-        '.abbbbbbba..',
-        '..abdddbba..',
-        '...abbbba...',
-        '..eebbbee...',
-        '...ebbbe....',
-        '...abbbba...',
-        '....abba....',
-        '...ab..ba...',
-        '..ab....ba..',
+        '....aaaaaaaa....',
+        '...abbbbbbbba...',
+        '..abcbbbbbcbba..',
+        '..abbbbbbbbba...',
+        '...abddddbba....',
+        '....abbbbbba....',
+        '...eebbbbbee....',
+        '....ebbbbbbe....',
+        '...aabbbbbba....',
+        '....aabbbaa.....',
+        '....ab....ba....',
+        '...ab......ba...',
       ],
       palette: { a: '#2a4a2a', b: '#4a8a4a', c: '#ff2222', d: '#1a2a1a', e: '#3a5a3a' }
     },
     ogre: {
       pixels: [
-        '..aaaaaaaa..',
-        '.abbbbbbbba.',
-        '.abcbbbbcba.',
-        '.abbbbbbbba.',
-        '.abbddddba..',
-        '..abbbbbba..',
-        '.eebbbbbbee.',
-        '.eabbbbbba..',
-        '..abbbbbba..',
-        '...abbbba...',
-        '..aab..baa..',
-        '.aab....baa.',
+        '...aaaaaaaaaa....',
+        '..abbbbbbbbbba...',
+        '..abcbbbbbcbba...',
+        '..abbbbbbbbbba...',
+        '..abbddddddbba...',
+        '...abbbbbbbba....',
+        '..eebbbbbbbbee...',
+        '..eabbbbbbbbae...',
+        '...abbbbbbbba....',
+        '....abbbbbba.....',
+        '...aab....baa....',
+        '..aab......baa...',
       ],
       palette: { a: '#4a3020', b: '#7a9a44', c: '#ff4444', d: '#3a5a1a', e: '#8a6a4a' }
     },
     snake: {
       pixels: [
-        '............',
-        '..aa........',
-        '.abba.......',
-        '.accba......',
-        '..abba......',
-        '...abba.....',
-        '....abba....',
-        '.....abba...',
-        '......abba..',
-        '.......abba.',
-        '........ab..',
-        '............',
+        '...aa...............',
+        '..abba..............',
+        '..accba.............',
+        '...abba.............',
+        '....abba............',
+        '.....abbba..........',
+        '......abbba.........',
+        '.......abbba........',
+        '........abbba.......',
+        '.........abba.......',
+        '..........ab........',
       ],
       palette: { a: '#1a6a1a', b: '#2aaa2a', c: '#ff2222' }
     },
     wizard: {
       pixels: [
-        '....aa......',
-        '...abba.....',
-        '..abbbba....',
-        '.abbbbbba...',
-        '..cccccc....',
-        '..cdccdc....',
-        '..cccccc....',
-        '..cceecc....',
-        '.ffcccccff..',
-        '...cccc.....',
-        '..cccccc....',
-        '.cc....cc...',
+        '.....aa...........',
+        '....abba..........',
+        '...abbbba.........',
+        '..abbbbbba........',
+        '...cccccccc.......',
+        '...cdcccdcc.......',
+        '...cccccccc.......',
+        '...cceecccc.......',
+        '..ffccccccff......',
+        '....cccccc........',
+        '...cccccccc.......',
+        '..cc......cc......',
       ],
-      palette: { a: '#4444aa', b: '#6666dd', c: '#8844aa', d: '#ffff44', e: '#222222', f: '#aa44aa' }
+      palette: { a: '#4444aa', b: '#6666dd', c: '#7733aa', d: '#ffff44', e: '#222222', f: '#aa44aa' }
     },
     demon: {
       pixels: [
-        '.aa......aa.',
-        '.aba....aba.',
-        '..abaaaba...',
-        '..abbbbbba..',
-        '.abcbbbbcba.',
-        '.abbbbbbba..',
-        '.abddddba..',
-        '..abbbbbba..',
-        '..ebbbbbbe..',
-        '...abbbba...',
-        '..ab....ba..',
-        '.ab......ba.',
+        '.aa..........aa.',
+        '.aba........aba.',
+        '..abba..abba....',
+        '..aabbbbbbba....',
+        '.abcbbbbbbbcba..',
+        '.abbbbbbbbbba...',
+        '.abbddddddba...',
+        '..abbbbbbbba....',
+        '..ebbbbbbbbe....',
+        '...abbbbbba.....',
+        '..ab......ba....',
+        '.ab........ba...',
       ],
       palette: { a: '#aa2222', b: '#dd4444', c: '#ffff00', d: '#880000', e: '#cc3333' }
     },
     scorpion: {
       pixels: [
-        '..a.........',
-        '..ab........',
-        '...ab.......',
-        '....ab......',
-        '.....abaa...',
-        '..aaabbbba..',
-        '.abbbbbbbba.',
-        'abcbbbbbbcba',
-        '.abbbbbbbba.',
-        '..a.abba.a..',
-        '.a...aa...a.',
-        'a..........a',
+        '...a................',
+        '...ab...............',
+        '....ab..............',
+        '.....ab.............',
+        '......abba..........',
+        '...aaabbbbbba.......',
+        '..abbbbbbbbbba......',
+        '.abcbbbbbbbbbcba....',
+        '..abbbbbbbbbba......',
+        '...a..abba..a.......',
+        '..a....aa....a......',
+        '.a..........a.......',
       ],
       palette: { a: '#8a4a00', b: '#cc7722', c: '#222222' }
     },
     werewolf: {
       pixels: [
-        '..aa....aa..',
-        '.abba..abba.',
-        '.abbbaaabba.',
-        '..abbbbbba..',
-        '..abcbbcba..',
-        '..abbbbbba..',
-        '..abddddba..',
-        '.aabbbbbbaa.',
-        '.abbbbbbbba.',
-        '..abbbbbba..',
-        '..ab....ba..',
-        '.ab......ba.',
+        '...aa......aa...',
+        '..abba....abba..',
+        '..abbbaabbabba..',
+        '...abbbbbbbba...',
+        '...abcbbbbcba...',
+        '...abbbbbbbba...',
+        '...abdddddba...',
+        '..aabbbbbbbbaa..',
+        '..abbbbbbbbbba..',
+        '...abbbbbbbba...',
+        '...ab......ba...',
+        '..ab........ba..',
       ],
-      palette: { a: '#3a3a3a', b: '#6a5a4a', c: '#ffcc00', d: '#ffffff' }
+      palette: { a: '#3a3a3a', b: '#7a6a5a', c: '#ffcc00', d: '#ffffff' }
     },
     // BOSSES
     dragon: {
       pixels: [
-        '.aa......aa.',
-        '.aba....aba.',
-        '..abaaba....',
-        '..abbbbbba..',
-        '.abcbbbbcba.',
-        '.abbbbbbba..',
-        'eabbbbbbae..',
-        '.eabbbbbae..',
-        '..abddba....',
-        '...abba.....',
-        '..ab..ba....',
-        '.ab....ba...',
+        '..aa..........aa..',
+        '..aba........aba..',
+        '...abba..abba.....',
+        '...aabbbbbbba.....',
+        '..abcbbbbbbbcba...',
+        '..abbbbbbbbbba....',
+        '.eabbbbbbbbbbae...',
+        '..eabbbbbbbae.....',
+        '...abbdddbba......',
+        '....abbbba........',
+        '...ab....ba.......',
+        '..ab......ba......',
       ],
       palette: { a: '#228822', b: '#44cc44', c: '#ff4400', d: '#ffaa00', e: '#22aa22' }
     },
     golem: {
       pixels: [
-        '..aaaaaaaa..',
-        '.abbbbbbbba.',
-        '.abcbbbbcba.',
-        '.abbbbbbbba.',
-        '..abbbbbba..',
-        'ddabbbbbbadd',
-        'dabbbbbbbad.',
-        '.dabbbbbad..',
-        '..abbbbbba..',
-        '..abbbbbba..',
-        '..aab..baa..',
-        '.aab....baa.',
+        '...aaaaaaaaaa...',
+        '..abbbbbbbbbba..',
+        '..abcbbbbbcbba..',
+        '..abbbbbbbbbba..',
+        '...abbbbbbbba...',
+        '.ddabbbbbbbadd..',
+        '.dabbbbbbbbad...',
+        '..dabbbbbbad....',
+        '...abbbbbbbba...',
+        '...abbbbbbbba...',
+        '...aab....baa...',
+        '..aab......baa..',
       ],
       palette: { a: '#4444aa', b: '#7777dd', c: '#ff00ff', d: '#5555bb' }
     },
     overlord: {
       pixels: [
-        '..aeeeeeea..',
-        '..abbbbbba..',
-        '.aabbbbbba..',
-        '.abcbbbbcba.',
-        '.abbbbbbbba.',
-        '..abddddba..',
-        '..abbbbbba..',
-        '.ffbbbbbbff.',
-        '.fabbbbbba..',
-        '..abbbbbba..',
-        '..ab....ba..',
-        '.ab......ba.',
+        '...aeeeeeeeea...',
+        '...abbbbbbbba...',
+        '..aabbbbbbbba...',
+        '..abcbbbbbcbba..',
+        '..abbbbbbbbbba..',
+        '...abdddddba....',
+        '...abbbbbbbba...',
+        '..ffbbbbbbbbff..',
+        '..fabbbbbbbba...',
+        '...abbbbbbbba...',
+        '...ab......ba...',
+        '..ab........ba..',
       ],
       palette: { a: '#440000', b: '#cc2222', c: '#ffff00', d: '#ffffff', e: '#ffaa00', f: '#880000' }
     }
@@ -2049,14 +1995,14 @@ const PixelArt = {
     if (!sprite) return null;
     const c = document.createElement('canvas');
     const rows = sprite.pixels;
-    const cols = rows[0].length;
-    const px = Math.floor(size / Math.max(rows.length, cols));
+    const cols = Math.max(...rows.map(r => r.length));
+    const px = Math.max(1, Math.floor(size / Math.max(rows.length, cols)));
     c.width = cols * px;
     c.height = rows.length * px;
     const ctx = c.getContext('2d');
 
     for (let y = 0; y < rows.length; y++) {
-      for (let x = 0; x < cols; x++) {
+      for (let x = 0; x < rows[y].length; x++) {
         const ch = rows[y][x];
         if (ch !== '.') {
           ctx.fillStyle = sprite.palette[ch] || '#ff00ff';
@@ -2070,6 +2016,10 @@ const PixelArt = {
   toDataURL(spriteName, size) {
     const c = this.draw(spriteName, size || 96);
     return c ? c.toDataURL() : null;
+  },
+
+  getImgSrc(spriteName) {
+    return this.toDataURL(spriteName, 128) || '';
   }
 };
 
@@ -2900,24 +2850,25 @@ const DungeonMap = {
   },
 
   getMonster(floor) {
+    // immune: 'easy'|'medium'|'hard' — this attack type deals 0 damage
     const monsters = {
       1: [
-        { sprite: 'bat', name: 'TAKtoperz' },
-        { sprite: 'spider', name: 'Pająk' },
-        { sprite: 'rat', name: 'Szczur' },
-        { sprite: 'ghost', name: 'Duch' },
+        { sprite: 'bat', name: 'TAKtoperz', immune: 'easy' },
+        { sprite: 'spider', name: 'Pająk', immune: 'hard' },
+        { sprite: 'rat', name: 'Szczur', immune: null },
+        { sprite: 'ghost', name: 'Duch', immune: 'medium' },
       ],
       2: [
-        { sprite: 'skeleton', name: 'Szkielet' },
-        { sprite: 'zombie', name: 'Zombie' },
-        { sprite: 'ogre', name: 'Ogr' },
-        { sprite: 'snake', name: 'Wąż' },
+        { sprite: 'skeleton', name: 'Szkielet', immune: 'hard' },
+        { sprite: 'zombie', name: 'Zombie', immune: 'easy' },
+        { sprite: 'ogre', name: 'Ogr', immune: 'medium' },
+        { sprite: 'snake', name: 'Wąż', immune: 'hard' },
       ],
       3: [
-        { sprite: 'wizard', name: 'Czarnoksiężnik' },
-        { sprite: 'demon', name: 'Demon' },
-        { sprite: 'scorpion', name: 'Skorpion' },
-        { sprite: 'werewolf', name: 'Wilkołak' },
+        { sprite: 'wizard', name: 'Czarnoksiężnik', immune: 'hard' },
+        { sprite: 'demon', name: 'Demon', immune: 'easy' },
+        { sprite: 'scorpion', name: 'Skorpion', immune: 'medium' },
+        { sprite: 'werewolf', name: 'Wilkołak', immune: 'hard' },
       ]
     };
     const list = monsters[floor];
@@ -2925,10 +2876,11 @@ const DungeonMap = {
   },
 
   getBossMonster(floor) {
+    // Bosses have rotating immunity — changes each turn (handled in Battle)
     const bosses = {
-      1: { sprite: 'dragon', name: 'SMOK OBLICZENIOWY' },
-      2: { sprite: 'golem', name: 'GOLEM UŁAMKÓW' },
-      3: { sprite: 'overlord', name: 'WŁADCA DUNGEONU' },
+      1: { sprite: 'dragon', name: 'SMOK OBLICZENIOWY', immune: null },
+      2: { sprite: 'golem', name: 'GOLEM UŁAMKÓW', immune: null },
+      3: { sprite: 'overlord', name: 'WŁADCA DUNGEONU', immune: null },
     };
     return bosses[floor];
   },
@@ -3794,12 +3746,19 @@ const Battle = {
 
     Game.state = 'battle';
 
-    // Render monster image
+    // Render pixel-art monster
     const monsterArea = document.getElementById('monster-emoji');
-    const imgSrc = PixelArt.getImgSrc(room.monster.sprite);
     const imgSize = room.isBoss ? 120 : 96;
-    monsterArea.innerHTML = `<img src="${imgSrc}" class="monster-sprite" style="width:${imgSize}px;height:auto;" alt="${room.monster.name}">`;
-    document.getElementById('monster-name').textContent = room.monster.name;
+    const dataUrl = PixelArt.toDataURL(room.monster.sprite, imgSize);
+    if (dataUrl) {
+      monsterArea.innerHTML = `<img src="${dataUrl}" class="monster-sprite" style="width:${imgSize}px;height:auto;image-rendering:pixelated;" alt="${room.monster.name}">`;
+    } else {
+      monsterArea.textContent = room.monster.name;
+    }
+    const immuneNames = { easy: 'lekki atak', medium: 'mocny atak', hard: 'potężny atak' };
+    const immuneType = room.monster.immune;
+    document.getElementById('monster-name').innerHTML = room.monster.name +
+      (immuneType ? `<div class="monster-immune-info">🛡️ Odporny na: ${immuneNames[immuneType]}</div>` : '');
     this.updateMonsterHP();
 
     // Show attack choice, hide question
@@ -3854,16 +3813,35 @@ const Battle = {
       this._previewedQuestions = null;
     }
 
-    // Disable last-used attack
-    document.querySelectorAll('.attack-choice-btn').forEach(btn => {
+    // Disable last-used attack AND immune attack
+    const immune = this.currentRoom ? this.currentRoom.monster?.immune : null;
+    const immuneLabels = { easy: 'Lekki', medium: 'Mocny', hard: 'Potężny' };
+    const diffKeys = ['easy', 'medium', 'hard'];
+
+    document.querySelectorAll('.attack-choice-btn').forEach((btn, i) => {
       btn.disabled = false;
       btn.style.opacity = '1';
       btn.style.cursor = 'pointer';
+      // Remove old immune badge
+      const oldBadge = btn.querySelector('.immune-badge');
+      if (oldBadge) oldBadge.remove();
+
+      // Disable immune attack
+      if (immune && diffKeys[i] === immune) {
+        btn.disabled = true;
+        btn.style.opacity = '0.3';
+        btn.style.cursor = 'not-allowed';
+        const badge = document.createElement('div');
+        badge.className = 'immune-badge';
+        badge.textContent = '🛡️ ODPORNY';
+        btn.appendChild(badge);
+      }
     });
+
     if (this.lastAttack) {
       const map = { easy: 0, medium: 1, hard: 2 };
       const btn = document.querySelectorAll('.attack-choice-btn')[map[this.lastAttack]];
-      if (btn) {
+      if (btn && !btn.disabled) {
         btn.disabled = true;
         btn.style.opacity = '0.35';
         btn.style.cursor = 'not-allowed';
@@ -5033,7 +5011,7 @@ const Practice = {
 
 // ─── INIT ───
 Game.checkContinue();
-PixelArt.preload();
+// Pixel art sprites are drawn on-demand, no preload needed
 
 // iOS touch fix — buttons with onclick need cursor:pointer or touchend
 document.addEventListener('touchend', (e) => {
