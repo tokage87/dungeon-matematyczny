@@ -186,105 +186,112 @@ body {
 }
 
 .challenge-box {
-  background: #050505;
-  border: 4px solid #ffffff;
-  border-radius: 0;
-  padding: 18px;
+  background: #080810;
+  border: 3px solid #333355;
+  border-radius: 8px;
+  padding: 16px;
   width: min(760px, 95vw);
   max-height: 95vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 0 0 4px #050505, 0 0 0 8px #ffffff;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
 }
 
 .battle-stage {
   position: relative;
-  min-height: 320px;
-  margin-bottom: 10px;
-  background: linear-gradient(180deg, #080818 0%, #050510 60%, #0a0a1a 100%);
-  border: 4px solid #ffffff;
+  min-height: 280px;
+  margin-bottom: 8px;
+  background: linear-gradient(180deg, #0c0c22 0%, #08081a 50%, #121228 85%, #1a1a30 100%);
+  border: 3px solid #333355;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
+/* Ground ellipse shadows under sprites */
 .battle-platform {
   position: absolute;
-  height: 8px;
-  background: #ffffff;
-  box-shadow: 0 4px 0 #050505, 0 8px 0 #ffffff;
+  height: 12px;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.08) 0%, transparent 70%);
+  border: none;
+  box-shadow: none;
+  border-radius: 50%;
 }
 
 .battle-platform.enemy {
-  width: 190px;
-  top: 112px;
-  left: 36px;
+  width: 140px;
+  top: 145px;
+  right: 50px;
+  left: auto;
 }
 
 .battle-platform.player {
-  width: 240px;
-  bottom: 42px;
-  left: 36px;
+  width: 160px;
+  bottom: 35px;
+  left: 55px;
 }
 
 .battle-status-box {
   position: absolute;
-  background: #050505;
-  border: 4px solid #ffffff;
-  border-right-width: 10px;
-  border-bottom-width: 10px;
-  padding: 14px 18px 12px;
-  min-width: 250px;
+  background: rgba(5, 5, 15, 0.9);
+  border: 2px solid #555577;
+  border-radius: 6px;
+  padding: 10px 14px 8px;
+  min-width: 220px;
+  backdrop-filter: blur(4px);
 }
 
 .battle-status-box.enemy {
-  top: 10px;
-  left: 26px;
+  top: 12px;
+  left: 16px;
 }
 
 .battle-status-box.player {
-  right: 22px;
-  bottom: 62px;
-  min-width: 290px;
+  right: 16px;
+  bottom: 50px;
+  min-width: 240px;
 }
 
 .battle-status-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin-bottom: 6px;
 }
 
 .battle-name {
   font-family: 'Press Start 2P', monospace;
-  font-size: 14px;
+  font-size: 12px;
   color: #ffffff;
   line-height: 1.3;
 }
 
 .battle-level {
   font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
-  color: #ffffff;
+  font-size: 9px;
+  color: #aaaacc;
   white-space: nowrap;
 }
 
 .battle-hp-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .battle-hp-label {
   font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
-  color: #ffffff;
+  font-size: 9px;
+  color: #aaaacc;
   white-space: nowrap;
 }
 
 .battle-hp-shell {
   flex: 1;
-  height: 14px;
-  background: #050505;
-  border: 3px solid #ffffff;
+  height: 10px;
+  background: #111122;
+  border: 2px solid #444466;
+  border-radius: 3px;
   padding: 1px;
 }
 
@@ -292,22 +299,23 @@ body {
   height: 100%;
   width: 100%;
   background: #58b858;
+  border-radius: 1px;
   transition: width 0.35s ease, background 0.35s ease;
 }
 
 .battle-hp-value {
-  margin-top: 8px;
+  margin-top: 4px;
   text-align: right;
   font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
-  color: #ffffff;
+  font-size: 9px;
+  color: #8888aa;
 }
 
 .monster-area {
   position: absolute;
-  top: 108px;
-  right: 70px;
-  width: 180px;
+  top: 60px;
+  right: 55px;
+  width: 160px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -316,10 +324,10 @@ body {
 
 .player-battle-area {
   position: absolute;
-  left: 72px;
-  bottom: 70px;
-  width: 180px;
-  height: 150px;
+  left: 60px;
+  bottom: 55px;
+  width: 160px;
+  height: 130px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -338,7 +346,7 @@ body {
 .monster-emoji {
   font-size: 64px;
   display: block;
-  animation: monsterIdle 1.5s ease-in-out infinite;
+  animation: monsterIdle 2s ease-in-out infinite;
   line-height: 1;
 }
 
@@ -347,19 +355,20 @@ body {
   margin: 0 auto;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  animation: monsterIdle 2s ease-in-out infinite;
 }
 
 @keyframes monsterIdle {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  50% { transform: translateY(-6px); }
 }
 
 .monster-name {
   font-family: 'Press Start 2P', monospace;
   font-size: 8px;
-  color: #d8d8d8;
+  color: #8888aa;
   line-height: 1.5;
-  margin: -2px 0 8px;
+  margin: -2px 0 6px;
 }
 
 .battle-bottom {
@@ -369,10 +378,11 @@ body {
 }
 
 .battle-box {
-  background: #050505;
-  border: 4px solid #ffffff;
+  background: rgba(5, 5, 15, 0.8);
+  border: 2px solid #333355;
+  border-radius: 6px;
   min-height: 0;
-  padding: 16px 18px;
+  padding: 14px 16px;
 }
 
 .battle-message-box {
@@ -398,10 +408,11 @@ body {
 }
 
 .challenge-question {
-  background: #050505;
-  border: 4px solid #ffffff;
+  background: #0a0a1a;
+  border: 2px solid #444466;
+  border-radius: 6px;
   padding: 18px 20px;
-  margin: 0;
+  margin: 8px 0;
   min-height: 80px;
   display: flex;
   flex-direction: column;
@@ -945,38 +956,38 @@ body {
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
   padding: 14px 10px;
-  border-radius: 0;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s;
   width: 100%;
   text-align: center;
   line-height: 1.5;
-  border: 3px solid;
+  border: 2px solid;
   position: relative;
 }
 
 .attack-choice-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  filter: brightness(1.15);
-  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+  filter: brightness(1.2);
+  box-shadow: 0 4px 14px rgba(255,255,255,0.08);
 }
 
 .attack-easy {
-  background: linear-gradient(180deg, #0a1a0a 0%, #050f05 100%);
-  color: #88ff88;
-  border-color: #44aa44;
+  background: linear-gradient(180deg, #0c1e0c 0%, #060f06 100%);
+  color: #66dd66;
+  border-color: #2a6a2a;
 }
 
 .attack-medium {
-  background: linear-gradient(180deg, #1a1a0a 0%, #0f0f05 100%);
-  color: #ffdd66;
-  border-color: #aa8833;
+  background: linear-gradient(180deg, #1e1a0c 0%, #0f0e06 100%);
+  color: #ddbb44;
+  border-color: #6a5a22;
 }
 
 .attack-hard {
-  background: linear-gradient(180deg, #1a0a0a 0%, #0f0505 100%);
-  color: #ff8888;
-  border-color: #aa4444;
+  background: linear-gradient(180deg, #1e0c0c 0%, #0f0606 100%);
+  color: #dd6666;
+  border-color: #6a2a2a;
 }
 
 .dmg-badge {
@@ -986,7 +997,7 @@ body {
   border-radius: 0;
   margin-top: 6px;
   color: inherit;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 #potion-battle-btn {
@@ -994,13 +1005,13 @@ body {
 }
 
 .attack-choice-btn.potion-btn {
-  background: linear-gradient(180deg, #0a0a1a 0%, #05050f 100%);
-  color: #88aaff;
-  border-color: #4466aa;
+  background: linear-gradient(180deg, #0c0c1e 0%, #06060f 100%);
+  color: #6688dd;
+  border-color: #2a3a6a;
 }
 
 .attack-choice-btn.potion-btn:disabled {
-  opacity: 0.25;
+  opacity: 0.2;
   cursor: not-allowed;
 }
 
@@ -1773,19 +1784,21 @@ body {
     border-radius: 6px;
   }
 
-  .battle-stage { min-height: 260px; margin-bottom: 10px; }
-  .battle-platform.enemy { width: 130px; top: 92px; left: 18px; }
-  .battle-platform.player { width: 160px; left: 20px; bottom: 28px; }
-  .battle-status-box { min-width: 0; padding: 10px 12px 8px; }
-  .battle-status-box.enemy { top: 8px; left: 10px; width: 180px; }
-  .battle-status-box.player { right: 10px; bottom: 46px; width: 200px; }
+  .battle-stage { min-height: 230px; margin-bottom: 8px; }
+  .battle-platform.enemy { width: 110px; top: 120px; right: 30px; left: auto; }
+  .battle-platform.player { width: 130px; left: 30px; bottom: 25px; }
+  .battle-status-box { min-width: 0; padding: 8px 10px 6px; }
+  .battle-status-box.enemy { top: 8px; left: 8px; width: 170px; }
+  .battle-status-box.player { right: 8px; bottom: 38px; width: 180px; }
   .battle-name { font-size: 10px; }
-  .battle-level, .battle-hp-label, .battle-hp-value { font-size: 8px; }
-  .monster-area { top: 100px; right: 18px; width: 120px; }
-  .player-battle-area { left: 28px; bottom: 52px; width: 120px; height: 110px; }
+  .battle-level { font-size: 7px; }
+  .battle-hp-label, .battle-hp-value { font-size: 7px; }
+  .battle-hp-shell { height: 8px; }
+  .monster-area { top: 50px; right: 30px; width: 120px; }
+  .player-battle-area { left: 30px; bottom: 42px; width: 120px; height: 100px; }
   .monster-emoji { font-size: 48px; }
   .monster-sprite { max-width: 72px !important; }
-  .monster-name { font-size: 10px; }
+  .monster-name { font-size: 8px; }
   .battle-box { min-height: 0; padding: 12px; }
   .battle-prompt { font-size: 10px; }
 
