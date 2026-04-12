@@ -414,6 +414,66 @@ body {
   background: linear-gradient(180deg, #3a9a3a 0%, #2a6a2a 100%) !important;
 }
 
+/* ─── FRACTION DISPLAY ─── */
+.frac-display {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 6px;
+}
+
+.frac-num, .frac-den {
+  font-size: 28px;
+  color: #ffffff;
+  padding: 2px 8px;
+}
+
+.frac-line {
+  width: 100%;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 2px;
+}
+
+.frac-arrow {
+  font-size: 28px;
+  color: #f0d060;
+  vertical-align: middle;
+  margin: 0 10px;
+}
+
+.frac-input-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 6px;
+}
+
+.frac-input-stack input {
+  width: 50px;
+  height: 36px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  text-align: center;
+  background: #0a0a20;
+  color: #f0d060;
+  border: 2px solid #f0d060;
+  border-radius: 4px;
+  outline: none;
+  padding: 0;
+}
+
+.frac-input-stack input:focus {
+  box-shadow: 0 0 8px #f0d06066;
+  background: #1a1040;
+}
+
+.frac-input-stack .frac-line {
+  background: #f0d060;
+}
+
 /* ─── IMMUNITY BADGE ─── */
 .immune-badge {
   font-family: 'Press Start 2P', monospace;
@@ -1604,7 +1664,7 @@ body {
         🗡️ Mocny atak<br><span class="dmg-badge">2 DMG</span>
       </button>
       <button class="attack-choice-btn attack-hard" onclick="Battle.chooseAttack('hard')" id="attack-hard-btn">
-        💥 Potężny atak<br><span class="dmg-badge" id="hard-dmg-label">ONE HIT</span>
+        💥 Potężny atak<br><span class="dmg-badge" id="hard-dmg-label">3 DMG</span>
       </button>
     </div>
     <div id="potion-battle-btn" style="display:none; margin-top:10px;">
@@ -2170,13 +2230,22 @@ const MathGen = {
   // ── Category D: Fraction reduction ──
   fractionReduce() {
     const fractions = [
-      [1,2], [1,3], [1,4], [1,5], [2,3], [2,5], [3,4], [3,5],
-      [3,7], [2,7], [4,5], [5,6], [3,8], [5,8], [4,7], [5,7]
+      [1,2], [1,3], [1,4], [1,5], [1,6], [1,7], [1,8], [1,9], [1,10],
+      [2,3], [2,5], [2,7], [2,9],
+      [3,4], [3,5], [3,7], [3,8], [3,10],
+      [4,5], [4,7], [4,9],
+      [5,6], [5,7], [5,8], [5,9],
+      [6,7],
+      [7,8], [7,9], [7,10],
+      [8,9],
+      [9,10],
     ];
     const [num, den] = fractions[Math.floor(Math.random() * fractions.length)];
     const factor = randInt(2, 7);
     return {
-      text: `Skróć ułamek:\n\n${num * factor}/${den * factor}`,
+      text: '',
+      displayNum: num * factor,
+      displayDen: den * factor,
       answer: `${num}/${den}`,
       type: 'fraction',
       correctNum: num,
@@ -2336,12 +2405,14 @@ const MathGen = {
   // ── Category H: Written multiplication ──
   writtenMultiply(floor) {
     let a, b;
-    if (floor <= 2) {
-      a = randInt(12, 999);
+    if (Math.random() < 0.25) {
+      // Mnożenie przez 1-cyfrową (25%)
+      a = randInt(12, floor <= 2 ? 999 : 9999);
       b = randInt(2, 9);
     } else {
-      a = randInt(100, 9999);
-      b = randInt(2, 9);
+      // Mnożenie przez 2-cyfrową (75%)
+      a = randInt(12, floor <= 2 ? 99 : 999);
+      b = randInt(11, floor <= 2 ? 49 : 99);
     }
     const result = a * b;
     const aStr = String(a);
@@ -2433,6 +2504,72 @@ const MathGen = {
         correct: 0,
         hint: 'Przez dwa punkty przechodzi dokładnie jedna prosta'
       },
+      {
+        q: 'Przez jeden punkt można poprowadzić...',
+        a: ['Jedną prostą', 'Dwie proste', 'Trzy proste', 'Nieskończenie wiele prostych'],
+        correct: 3,
+        hint: 'Przez jeden punkt przechodzi nieskończenie wiele prostych — w każdym kierunku'
+      },
+      {
+        q: 'Jak oznaczamy prostą przechodzącą przez punkty A i B?',
+        a: ['AB (z kreską nad)', '|AB|', 'AB→', '(AB)'],
+        correct: 0,
+        hint: 'Prosta AB — kreska nad literami oznacza prostą'
+      },
+      {
+        q: 'Czym różni się odcinek AB od prostej AB?',
+        a: ['Niczym', 'Odcinek jest skończony, prosta nieskończona', 'Prosta jest krótsza', 'Odcinek jest krzywą'],
+        correct: 1,
+        hint: 'Odcinek ma dwa końce — prosta ciągnie się bez końca'
+      },
+      {
+        q: 'Ile prostych można poprowadzić przez trzy punkty leżące na jednej linii?',
+        a: ['0', '1', '3', 'Nieskończenie wiele'],
+        correct: 1,
+        hint: 'Punkty współliniowe — leżą na jednej prostej'
+      },
+      {
+        q: 'Punkt leży na prostej. Na ile części dzieli tę prostą?',
+        a: ['1', '2', '3', 'Nie dzieli'],
+        correct: 1,
+        hint: 'Punkt dzieli prostą na dwie półproste'
+      },
+      {
+        q: 'Dwie proste na płaszczyźnie mogą...',
+        a: ['Tylko się przecinać', 'Tylko być równoległe', 'Przecinać się lub być równoległe', 'Być krzywymi'],
+        correct: 2,
+        hint: 'Dwie proste: albo mają punkt wspólny, albo są równoległe'
+      },
+      {
+        q: 'Co to jest punkt przecięcia?',
+        a: ['Koniec odcinka', 'Punkt wspólny dwóch prostych', 'Środek prostej', 'Punkt na półprostej'],
+        correct: 1,
+        hint: 'Tam gdzie dwie proste się spotykają'
+      },
+      {
+        q: 'Ile odcinków można narysować mając 3 punkty (nie na jednej prostej)?',
+        a: ['1', '2', '3', '6'],
+        correct: 2,
+        hint: 'AB, BC, AC — trzy pary punktów, trzy odcinki'
+      },
+      {
+        q: 'Jak nazywamy odległość między końcami odcinka?',
+        a: ['Długość odcinka', 'Szerokość prostej', 'Promień', 'Średnica'],
+        correct: 0,
+        hint: 'Mierzymy linijką — to długość odcinka'
+      },
+      {
+        q: 'Czy półprosta ma długość?',
+        a: ['Tak, skończoną', 'Tak, nieskończoną', 'Nie ma długości', 'Ma długość 0'],
+        correct: 1,
+        hint: 'Półprosta zaczyna się w punkcie i ciągnie w nieskończoność'
+      },
+      {
+        q: 'Ile odcinków wyznaczają 4 punkty na prostej?',
+        a: ['3', '4', '6', '8'],
+        correct: 2,
+        hint: 'Każda para punktów to odcinek: AB, AC, AD, BC, BD, CD = 6'
+      },
     ];
     const q = questions[Math.floor(Math.random() * questions.length)];
     const labels = ['A', 'B', 'C', 'D'];
@@ -2507,6 +2644,134 @@ const MathGen = {
       answer: labels[correctIdx],
       cssClass: 'word-problem'
     };
+  },
+
+  // ── Category M: Fraction from figure (visual) ──
+  fractionFigure() {
+    // Pick random denominator (how many parts) and numerator (how many colored)
+    const denOptions = [2, 3, 4, 5, 6, 8];
+    const den = denOptions[Math.floor(Math.random() * denOptions.length)];
+    const num = randInt(1, den - 1);
+    // Pick shape type
+    const shapes = ['circle', 'rect', 'bar'];
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+
+    return {
+      text: '',
+      type: 'fractionFigure',
+      figShape: shape,
+      figNum: num,
+      figDen: den,
+      answer: `${num}/${den}`,
+      correctNum: num,
+      correctDen: den
+    };
+  },
+
+  // ── Category L: Order of operations ──
+  orderOfOps(floor) {
+    const templates = [
+      // Type 1: a + b · c
+      () => {
+        const a = randInt(2, 20);
+        const b = randInt(2, 10);
+        const c = randInt(2, 10);
+        return { text: `${a} + ${b} · ${c} = ?`, answer: String(a + b * c) };
+      },
+      // Type 2: a · b + c
+      () => {
+        const a = randInt(2, 10);
+        const b = randInt(2, 10);
+        const c = randInt(2, 20);
+        return { text: `${a} · ${b} + ${c} = ?`, answer: String(a * b + c) };
+      },
+      // Type 3: a − b · c
+      () => {
+        const b = randInt(2, 8);
+        const c = randInt(2, 8);
+        const a = b * c + randInt(5, 30);
+        return { text: `${a} − ${b} · ${c} = ?`, answer: String(a - b * c) };
+      },
+      // Type 4: a · b − c · d
+      () => {
+        const a = randInt(2, 8);
+        const b = randInt(2, 8);
+        const c = randInt(2, 6);
+        const d = randInt(2, 6);
+        const result = a * b - c * d;
+        if (result < 0) return this.orderOfOps(floor); // retry if negative
+        return { text: `${a} · ${b} − ${c} · ${d} = ?`, answer: String(result) };
+      },
+      // Type 5: (a + b) · c
+      () => {
+        const a = randInt(2, 15);
+        const b = randInt(2, 15);
+        const c = randInt(2, 8);
+        return { text: `(${a} + ${b}) · ${c} = ?`, answer: String((a + b) * c) };
+      },
+      // Type 6: a · (b − c)
+      () => {
+        const c = randInt(2, 10);
+        const b = c + randInt(2, 15);
+        const a = randInt(2, 8);
+        return { text: `${a} · (${b} − ${c}) = ?`, answer: String(a * (b - c)) };
+      },
+      // Type 7: a + b · c − d
+      () => {
+        const a = randInt(5, 20);
+        const b = randInt(2, 8);
+        const c = randInt(2, 8);
+        const d = randInt(1, 10);
+        const result = a + b * c - d;
+        if (result < 0) return this.orderOfOps(floor); // retry
+        return { text: `${a} + ${b} · ${c} − ${d} = ?`, answer: String(result) };
+      },
+      // Type 8: a · b + c · d
+      () => {
+        const a = randInt(2, 8);
+        const b = randInt(2, 8);
+        const c = randInt(2, 6);
+        const d = randInt(2, 6);
+        return { text: `${a} · ${b} + ${c} · ${d} = ?`, answer: String(a * b + c * d) };
+      },
+      // Type 9: (a + b) · c + d
+      () => {
+        const a = randInt(2, 10);
+        const b = randInt(2, 10);
+        const c = randInt(2, 6);
+        const d = randInt(2, 15);
+        return { text: `(${a} + ${b}) · ${c} + ${d} = ?`, answer: String((a + b) * c + d) };
+      },
+      // Type 10: a · (b + c) − d
+      () => {
+        const b = randInt(2, 10);
+        const c = randInt(2, 10);
+        const a = randInt(2, 6);
+        const d = randInt(1, a * (b + c) - 1);
+        return { text: `${a} · (${b} + ${c}) − ${d} = ?`, answer: String(a * (b + c) - d) };
+      },
+      // Type 11: a : b + c · d
+      () => {
+        const b = randInt(2, 9);
+        const quotient = randInt(2, 12);
+        const a = b * quotient;
+        const c = randInt(2, 8);
+        const d = randInt(2, 8);
+        return { text: `${a} : ${b} + ${c} · ${d} = ?`, answer: String(quotient + c * d) };
+      },
+      // Type 12: a · b + c : d
+      () => {
+        const a = randInt(2, 8);
+        const b = randInt(2, 8);
+        const d = randInt(2, 9);
+        const quotient = randInt(2, 12);
+        const c = d * quotient;
+        return { text: `${a} · ${b} + ${c} : ${d} = ?`, answer: String(a * b + quotient) };
+      },
+    ];
+    const gen = templates[Math.floor(Math.random() * templates.length)];
+    const q = gen();
+    return { text: q.text, answer: q.answer, type: 'number' };
   },
 
   // ── Get question for floor ──
@@ -2611,6 +2876,76 @@ function numberToPolish(n) {
   }
 
   return parts.join(' ').replace(/\s+/g, ' ').trim();
+}
+
+function drawFractionFigure(canvasId, shape, num, den) {
+  setTimeout(() => {
+    const c = document.getElementById(canvasId);
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    const w = c.width, h = c.height;
+    ctx.fillStyle = '#0a0a20';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    const colorFill = '#4488dd';
+    const colorEmpty = '#1a1a40';
+    const colorLine = '#8888aa';
+
+    if (shape === 'circle') {
+      const radius = Math.min(w, h) * 0.38;
+      // Draw pie slices
+      for (let i = 0; i < den; i++) {
+        const startAngle = -Math.PI / 2 + (i * 2 * Math.PI / den);
+        const endAngle = -Math.PI / 2 + ((i + 1) * 2 * Math.PI / den);
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = i < num ? colorFill : colorEmpty;
+        ctx.fill();
+        ctx.strokeStyle = colorLine;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    } else if (shape === 'rect') {
+      // Grid of squares
+      const cols = den <= 4 ? den : Math.ceil(den / 2);
+      const rows = den <= 4 ? 1 : 2;
+      const cellW = Math.min(50, (w - 40) / cols);
+      const cellH = cellW;
+      const startX = cx - (cols * cellW) / 2;
+      const startY = cy - (rows * cellH) / 2;
+      let idx = 0;
+      for (let r = 0; r < rows; r++) {
+        for (let col = 0; col < cols; col++) {
+          if (idx >= den) break;
+          const x = startX + col * cellW;
+          const y = startY + r * cellH;
+          ctx.fillStyle = idx < num ? colorFill : colorEmpty;
+          ctx.fillRect(x, y, cellW, cellH);
+          ctx.strokeStyle = colorLine;
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x, y, cellW, cellH);
+          idx++;
+        }
+      }
+    } else { // bar
+      const barW = Math.min(w - 40, den * 45);
+      const barH = 50;
+      const cellW = barW / den;
+      const startX = cx - barW / 2;
+      const startY = cy - barH / 2;
+      for (let i = 0; i < den; i++) {
+        const x = startX + i * cellW;
+        ctx.fillStyle = i < num ? colorFill : colorEmpty;
+        ctx.fillRect(x, startY, cellW, barH);
+        ctx.strokeStyle = colorLine;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, startY, cellW, barH);
+      }
+    }
+  }, 50);
 }
 
 function drawNumberLine(canvasId, marks) {
@@ -2749,7 +3084,7 @@ const DungeonMap = {
     const columns = [];
     columns.push([null]); // start column — 1 room
     for (let c = 1; c < numCols; c++) {
-      const count = randInt(2, 3);
+      const count = randInt(2, 4);
       const col = [];
       for (let r = 0; r < count; r++) col.push(null);
       columns.push(col);
@@ -2787,8 +3122,11 @@ const DungeonMap = {
           }
         }
 
+        const monster = (isQuest || isShop) ? null : (isBoss ? this.getBossMonster(floorNum) : this.getMonster(floorNum));
         const range = isBoss ? hpRanges.boss[floorNum] : hpRanges.normal[floorNum];
-        const hp = (isQuest || isShop) ? 0 : randInt(range[0], range[1]);
+        let hp = (isQuest || isShop) ? 0 : randInt(range[0], range[1]);
+        // Override HP for special monsters (e.g. TAKtoperz)
+        if (monster && monster.hpOverride) hp = randInt(monster.hpOverride[0], monster.hpOverride[1]);
         const room = {
           id: id++,
           col: c,
@@ -2802,7 +3140,7 @@ const DungeonMap = {
           isQuest,
           isShop,
           quest: isQuest ? Quest.generate(floorNum) : null,
-          monster: (isQuest || isShop) ? null : (isBoss ? this.getBossMonster(floorNum) : this.getMonster(floorNum)),
+          monster,
           monsterHP: hp,
         };
         this.rooms.push(room);
@@ -2853,7 +3191,7 @@ const DungeonMap = {
     // immune: 'easy'|'medium'|'hard' — this attack type deals 0 damage
     const monsters = {
       1: [
-        { sprite: 'bat', name: 'TAKtoperz', immune: 'easy' },
+        { sprite: 'bat', name: 'TAKtoperz', immune: null, onlyEasy: true, hpOverride: [1, 3] },
         { sprite: 'spider', name: 'Pająk', immune: 'hard' },
         { sprite: 'rat', name: 'Szczur', immune: null },
         { sprite: 'ghost', name: 'Duch', immune: 'medium' },
@@ -2939,14 +3277,27 @@ const DungeonMap = {
     }
   },
 
-  // After clearing a room, unlock its connected rooms
+  // After clearing a room: unlock forward path, lock everything else
   unlockConnected(room) {
+    // Unlock rooms this room connects to
     for (const targetId of room.connections) {
       const target = this.rooms.find(r => r.id === targetId);
       if (target) target.locked = false;
     }
-    // Lock rooms in same column that player didn't choose (unless already cleared)
-    // Actually, let them be — player already passed this column
+    // Lock all other uncompleted rooms in same column and earlier columns
+    for (const r of this.rooms) {
+      if (r.id === room.id) continue;
+      if (r.cleared) continue;
+      if (r.col <= room.col) {
+        // Same or earlier column — lock if not cleared
+        r.locked = true;
+      } else if (r.col === room.col + 1) {
+        // Next column — only unlock if connected from this room
+        if (!room.connections.includes(r.id)) {
+          r.locked = true;
+        }
+      }
+    }
   },
 
   render() {
@@ -3052,24 +3403,22 @@ const DungeonMap = {
         ctx.font = '22px sans-serif';
         ctx.fillStyle = '#4a8a4a';
         ctx.fillText('✓', cx, cy);
-      } else if (room.locked) {
-        ctx.font = '18px sans-serif';
-        ctx.fillStyle = '#444455';
-        ctx.fillText('🔒', cx, cy);
-      } else if (room.isShop) {
-        ctx.font = '28px sans-serif';
-        ctx.fillText('🏪', cx, cy);
-      } else if (room.isQuest) {
-        ctx.font = '28px sans-serif';
-        ctx.fillText(room.quest.npc, cx, cy);
       } else {
-        // Monster PNG sprite
-        const spriteCanvas = PixelArt.draw(room.monster.sprite, room.isBoss ? 52 : 40);
-        if (spriteCanvas) {
-          ctx.drawImage(spriteCanvas, rx + (rs - spriteCanvas.width) / 2, ry + (rs - spriteCanvas.height) / 2);
-        } else {
-          ctx.font = '12px sans-serif'; ctx.fillStyle = '#666'; ctx.fillText('...', cx, cy);
+        // Show room content (dimmed if locked)
+        if (room.locked) ctx.globalAlpha = 0.35;
+        if (room.isShop) {
+          ctx.font = '28px sans-serif';
+          ctx.fillText('🏪', cx, cy);
+        } else if (room.isQuest) {
+          ctx.font = '28px sans-serif';
+          ctx.fillText(room.quest.npc, cx, cy);
+        } else if (room.monster) {
+          const spriteCanvas = PixelArt.draw(room.monster.sprite, room.isBoss ? 52 : 40);
+          if (spriteCanvas) {
+            ctx.drawImage(spriteCanvas, rx + (rs - spriteCanvas.width) / 2, ry + (rs - spriteCanvas.height) / 2);
+          }
         }
+        ctx.globalAlpha = 1;
       }
 
       // Boss glow
@@ -3084,7 +3433,8 @@ const DungeonMap = {
       }
 
       // Label preview for unlocked rooms
-      if (!room.locked && !room.cleared) {
+      if (!room.cleared) {
+        if (room.locked) ctx.globalAlpha = 0.35;
         ctx.font = '9px "Press Start 2P", monospace';
         const bootsLvl = Hero.getBootsLevel();
         if (room.isShop) {
@@ -3100,6 +3450,7 @@ const DungeonMap = {
           ctx.fillStyle = '#555566';
           ctx.fillText('???', cx, ry + rs + 12);
         }
+        ctx.globalAlpha = 1;
       }
     }
 
@@ -3758,7 +4109,8 @@ const Battle = {
     const immuneNames = { easy: 'lekki atak', medium: 'mocny atak', hard: 'potężny atak' };
     const immuneType = room.monster.immune;
     document.getElementById('monster-name').innerHTML = room.monster.name +
-      (immuneType ? `<div class="monster-immune-info">🛡️ Odporny na: ${immuneNames[immuneType]}</div>` : '');
+      (room.monster.onlyEasy ? `<div class="monster-immune-info">⚔️ Tylko lekki atak działa!</div>`
+        : immuneType ? `<div class="monster-immune-info">🛡️ Odporny na: ${immuneNames[immuneType]}</div>` : '');
     this.updateMonsterHP();
 
     // Show attack choice, hide question
@@ -3783,7 +4135,7 @@ const Battle = {
     btns[1].textContent = `${medDmg} DMG`;
     const hardLabel = document.getElementById('hard-dmg-label');
     if (this.currentRoom && !this.currentRoom.isBoss) {
-      hardLabel.textContent = 'ONE HIT';
+      hardLabel.textContent = `${hardDmg} DMG`;
     } else {
       hardLabel.textContent = `${hardDmg} DMG`;
     }
@@ -3827,13 +4179,16 @@ const Battle = {
       if (oldBadge) oldBadge.remove();
 
       // Disable immune attack
-      if (immune && diffKeys[i] === immune) {
+      const onlyEasy = this.currentRoom?.monster?.onlyEasy;
+      const shouldDisable = (immune && diffKeys[i] === immune) ||
+                            (onlyEasy && diffKeys[i] !== 'easy');
+      if (shouldDisable) {
         btn.disabled = true;
         btn.style.opacity = '0.3';
         btn.style.cursor = 'not-allowed';
         const badge = document.createElement('div');
         badge.className = 'immune-badge';
-        badge.textContent = '🛡️ ODPORNY';
+        badge.textContent = onlyEasy && diffKeys[i] !== 'easy' ? '🛡️ ODPORNY' : '🛡️ ODPORNY';
         btn.appendChild(badge);
       }
     });
@@ -3947,36 +4302,92 @@ const Battle = {
 
   genEasy(floor) {
     return this._pick([
-      { id: 'numberLine', gen: (f) => MathGen.numberLine(f) },
-      { id: 'numberLine', gen: (f) => MathGen.numberLine(f) }, // double weight
-      { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
-      { id: 'numberWords', gen: (f) => MathGen.numberWords(f) }, // double weight
+      // Obliczenia 25%
       { id: 'calculation', gen: (f) => MathGen.calculation(f) },
+      { id: 'calculation', gen: (f) => MathGen.calculation(f) },
+      { id: 'calculation', gen: (f) => MathGen.calculation(f) },
+      { id: 'calculation', gen: (f) => MathGen.calculation(f) },
+      { id: 'calculation', gen: (f) => MathGen.calculation(f) },
+      // Kolejność działań 25%
+      { id: 'orderOfOps', gen: (f) => MathGen.orderOfOps(f) },
+      { id: 'orderOfOps', gen: (f) => MathGen.orderOfOps(f) },
+      { id: 'orderOfOps', gen: (f) => MathGen.orderOfOps(f) },
+      { id: 'orderOfOps', gen: (f) => MathGen.orderOfOps(f) },
+      { id: 'orderOfOps', gen: (f) => MathGen.orderOfOps(f) },
+      // Brakująca liczba 20%
       { id: 'missingNumber', gen: (f) => MathGen.missingNumber(f) },
+      { id: 'missingNumber', gen: (f) => MathGen.missingNumber(f) },
+      { id: 'missingNumber', gen: (f) => MathGen.missingNumber(f) },
+      { id: 'missingNumber', gen: (f) => MathGen.missingNumber(f) },
+      // Oś liczbowa 15%
+      { id: 'numberLine', gen: (f) => MathGen.numberLine(f) },
+      { id: 'numberLine', gen: (f) => MathGen.numberLine(f) },
+      { id: 'numberLine', gen: (f) => MathGen.numberLine(f) },
+      // Zapis słowny 15%
+      { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
+      { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
+      { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
     ], floor);
   },
 
   genMedium(floor) {
     return this._pick([
+      // Równoległe/prostopadłe 20%
       { id: 'geometryLines', gen: () => MathGen.geometryParallelPerp() },
       { id: 'geometryLines', gen: () => MathGen.geometryParallelPerp() },
+      { id: 'geometryLines', gen: () => MathGen.geometryParallelPerp() },
+      { id: 'geometryLines', gen: () => MathGen.geometryParallelPerp() },
+      // Prosta/półprosta/odcinek 20%
       { id: 'geometryBasic', gen: () => MathGen.geometryBasic() },
       { id: 'geometryBasic', gen: () => MathGen.geometryBasic() },
+      { id: 'geometryBasic', gen: () => MathGen.geometryBasic() },
+      { id: 'geometryBasic', gen: () => MathGen.geometryBasic() },
+      // Ułamki z figury 20%
+      { id: 'fractionFigure', gen: () => MathGen.fractionFigure() },
+      { id: 'fractionFigure', gen: () => MathGen.fractionFigure() },
+      { id: 'fractionFigure', gen: () => MathGen.fractionFigure() },
+      { id: 'fractionFigure', gen: () => MathGen.fractionFigure() },
+      // Kolejność działań 15%
+      { id: 'orderOfOps', gen: (f) => MathGen.orderOfOps(f) },
+      { id: 'orderOfOps', gen: (f) => MathGen.orderOfOps(f) },
+      { id: 'orderOfOps', gen: (f) => MathGen.orderOfOps(f) },
+      // Quiz Roblox 15%
       { id: 'roblox', gen: () => this.getQuizQuestion() },
       { id: 'roblox', gen: () => this.getQuizQuestion() },
+      { id: 'roblox', gen: () => this.getQuizQuestion() },
+      // Ułamki — skracanie 10%
+      { id: 'fractions', gen: () => MathGen.fractionReduce() },
+      { id: 'fractions', gen: () => MathGen.fractionReduce() },
     ], floor);
   },
 
   genHard(floor) {
     return this._pick([
-      { id: 'writtenDivide', gen: (f) => MathGen.writtenDivide(f) },
-      { id: 'writtenDivide', gen: (f) => MathGen.writtenDivide(f) },
+      // Mnożenie pisemne 25%
       { id: 'writtenMultiply', gen: (f) => MathGen.writtenMultiply(f) },
       { id: 'writtenMultiply', gen: (f) => MathGen.writtenMultiply(f) },
-      { id: 'fractions', gen: () => MathGen.fractionReduce() },
-      { id: 'wordProblem', gen: () => MathGen.wordProblem() },
+      { id: 'writtenMultiply', gen: (f) => MathGen.writtenMultiply(f) },
+      { id: 'writtenMultiply', gen: (f) => MathGen.writtenMultiply(f) },
+      { id: 'writtenMultiply', gen: (f) => MathGen.writtenMultiply(f) },
+      // Dzielenie pisemne 25%
+      { id: 'writtenDivide', gen: (f) => MathGen.writtenDivide(f) },
+      { id: 'writtenDivide', gen: (f) => MathGen.writtenDivide(f) },
+      { id: 'writtenDivide', gen: (f) => MathGen.writtenDivide(f) },
+      { id: 'writtenDivide', gen: (f) => MathGen.writtenDivide(f) },
+      { id: 'writtenDivide', gen: (f) => MathGen.writtenDivide(f) },
+      // Działania pisemne +/- 20%
       { id: 'writtenCalc', gen: (f) => MathGen.writtenCalc(f) },
-      { id: 'missingNumber', gen: (f) => MathGen.missingNumber(f) },
+      { id: 'writtenCalc', gen: (f) => MathGen.writtenCalc(f) },
+      { id: 'writtenCalc', gen: (f) => MathGen.writtenCalc(f) },
+      { id: 'writtenCalc', gen: (f) => MathGen.writtenCalc(f) },
+      // Zadania z treścią 15%
+      { id: 'wordProblem', gen: () => MathGen.wordProblem() },
+      { id: 'wordProblem', gen: () => MathGen.wordProblem() },
+      { id: 'wordProblem', gen: () => MathGen.wordProblem() },
+      // Ułamki — skracanie 15%
+      { id: 'fractions', gen: () => MathGen.fractionReduce() },
+      { id: 'fractions', gen: () => MathGen.fractionReduce() },
+      { id: 'fractions', gen: () => MathGen.fractionReduce() },
     ], floor);
   },
 
@@ -3984,6 +4395,36 @@ const Battle = {
     const q = this.currentQuestion;
     const qText = document.getElementById('question-text');
     const answerArea = document.getElementById('answer-area');
+
+    // ── Fraction figure: canvas ──
+    if (q.type === 'fractionFigure') {
+      qText.className = 'question-text';
+      qText.innerHTML = `
+        <div class="geo-canvas-wrap">
+          <div style="font-size:15px;color:#aaa;margin-bottom:8px;">Jaka część figury jest zakolorowana?</div>
+          <canvas class="geo-canvas" id="fracfig-canvas" width="260" height="160"></canvas>
+        </div>
+      `;
+      drawFractionFigure('fracfig-canvas', q.figShape, q.figNum, q.figDen);
+      // Fraction input (vertical)
+      answerArea.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+          <div class="frac-input-stack">
+            <input type="number" id="frac-num" inputmode="numeric" autocomplete="off" placeholder="?">
+            <div class="frac-line"></div>
+            <input type="number" id="frac-den" inputmode="numeric" autocomplete="off" placeholder="?">
+          </div>
+          <button class="attack-btn" onclick="Battle.submitAnswer()">ATAKUJ! ⚔️</button>
+        </div>
+      `;
+      setTimeout(() => {
+        document.getElementById('frac-num').focus();
+        answerArea.querySelectorAll('input').forEach(inp => {
+          inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') Battle.submitAnswer(); });
+        });
+      }, 100);
+      return;
+    }
 
     // ── Number line: canvas ──
     if (q.type === 'numberline') {
@@ -4148,14 +4589,27 @@ const Battle = {
       if (q.hint) html += `<div class="quiz-hint">💡 ${q.hint}</div>`;
       answerArea.innerHTML = html;
     } else if (q.type === 'fraction') {
-      answerArea.innerHTML = `
-        <input type="number" class="answer-input fraction-input" id="frac-num" placeholder="L" autocomplete="off" inputmode="numeric">
-        <span class="fraction-separator">/</span>
-        <input type="number" class="answer-input fraction-input" id="frac-den" placeholder="M" autocomplete="off" inputmode="numeric">
-        <button class="attack-btn" onclick="Battle.submitAnswer()">ATAKUJ! ⚔️</button>
+      // Show fraction vertically in question area
+      qText.innerHTML = `
+        <div style="font-size:15px;color:#aaa;margin-bottom:12px;">Skróć ułamek:</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+          <div class="frac-display">
+            <div class="frac-num">${q.displayNum}</div>
+            <div class="frac-line"></div>
+            <div class="frac-den">${q.displayDen}</div>
+          </div>
+          <span class="frac-arrow">=</span>
+          <div class="frac-input-stack">
+            <input type="number" id="frac-num" inputmode="numeric" autocomplete="off" placeholder="?">
+            <div class="frac-line"></div>
+            <input type="number" id="frac-den" inputmode="numeric" autocomplete="off" placeholder="?">
+          </div>
+        </div>
       `;
+      qText.className = 'question-text';
+      answerArea.innerHTML = `<button class="attack-btn" onclick="Battle.submitAnswer()">ATAKUJ! ⚔️</button>`;
       setTimeout(() => document.getElementById('frac-num').focus(), 100);
-      answerArea.querySelectorAll('input').forEach(inp => {
+      qText.querySelectorAll('input').forEach(inp => {
         inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') Battle.submitAnswer(); });
       });
     } else {
@@ -4289,7 +4743,7 @@ const Battle = {
     const q = this.currentQuestion;
     let playerAnswer;
 
-    if (q.type === 'fraction') {
+    if (q.type === 'fraction' || q.type === 'fractionFigure') {
       const num = document.getElementById('frac-num').value.trim();
       const den = document.getElementById('frac-den').value.trim();
       if (!num || !den) return;
@@ -4311,10 +4765,6 @@ const Battle = {
     const fb = document.getElementById('feedback-text');
     Audio_.hit();
     let dmg = this.currentDamage;
-    // Hard attack one-shots non-boss monsters
-    if (this.currentDifficulty === 'hard' && !this.currentRoom.isBoss) {
-      dmg = this.monsterHP;
-    }
     // Potion double damage buff
     if (this.potionDoubleNext) {
       dmg *= 2;
@@ -4366,7 +4816,7 @@ const Battle = {
   },
 
   checkAnswer(playerAnswer, q) {
-    if (q.type === 'fraction') {
+    if (q.type === 'fraction' || q.type === 'fractionFigure') {
       const parts = playerAnswer.split('/');
       if (parts.length !== 2) return false;
       const pNum = parseInt(parts[0]);
@@ -4689,6 +5139,8 @@ const CatSelect = {
     { id: 'geometryBasic', icon: '📐', name: 'Prosta, półprosta, odcinek' },
     { id: 'geometryLines', icon: '📏', name: 'Równoległe i prostopadłe' },
     { id: 'wordProblem', icon: '📖', name: 'Zadania z treścią' },
+    { id: 'fractionFigure', icon: '🟦', name: 'Ułamki z figury' },
+    { id: 'orderOfOps', icon: '🔢', name: 'Kolejność działań' },
     { id: 'roblox', icon: '💻', name: 'Quiz Roblox Studio' },
   ],
 
@@ -4767,6 +5219,8 @@ const Practice = {
     { id: 'geometryBasic', icon: '📐', name: 'Prosta, półprosta, odcinek', desc: 'Pytania o linie geometryczne', gen: () => MathGen.geometryBasic() },
     { id: 'geometryLines', icon: '📏', name: 'Równoległe i prostopadłe', desc: 'Rozpoznaj relację między liniami', gen: () => MathGen.geometryParallelPerp() },
     { id: 'wordProblem', icon: '📖', name: 'Zadania z treścią', desc: 'Zadania tekstowe wieloetapowe', gen: () => MathGen.wordProblem() },
+    { id: 'fractionFigure', icon: '🟦', name: 'Ułamki z figury', desc: 'Zapisz zakolorowaną część jako ułamek', gen: () => MathGen.fractionFigure() },
+    { id: 'orderOfOps', icon: '🔢', name: 'Kolejność działań', desc: 'Mnożenie przed dodawaniem, nawiasy najpierw', gen: () => MathGen.orderOfOps(randInt(1,3)) },
     { id: 'roblox', icon: '💻', name: 'Quiz Roblox Studio', desc: 'Pytania z informatyki', gen: () => Battle.getQuizQuestion() },
   ],
 
@@ -4817,6 +5271,35 @@ const Practice = {
 
     const qText = document.getElementById('practice-question-text');
     const answerArea = document.getElementById('practice-answer-area');
+
+    // ── Fraction figure visual ──
+    if (q.type === 'fractionFigure') {
+      qText.className = 'question-text';
+      qText.innerHTML = `
+        <div class="geo-canvas-wrap">
+          <div style="font-size:15px;color:#aaa;margin-bottom:8px;">Jaka część figury jest zakolorowana?</div>
+          <canvas class="geo-canvas" id="pfracfig-canvas" width="260" height="160"></canvas>
+        </div>
+      `;
+      drawFractionFigure('pfracfig-canvas', q.figShape, q.figNum, q.figDen);
+      answerArea.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+          <div class="frac-input-stack">
+            <input type="number" id="pfrac-num" inputmode="numeric" autocomplete="off" placeholder="?">
+            <div class="frac-line"></div>
+            <input type="number" id="pfrac-den" inputmode="numeric" autocomplete="off" placeholder="?">
+          </div>
+          <button class="attack-btn" onclick="Practice.submit()">SPRAWDŹ ✓</button>
+        </div>
+      `;
+      setTimeout(() => {
+        document.getElementById('pfrac-num').focus();
+        answerArea.querySelectorAll('input').forEach(inp => {
+          inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') Practice.submit(); });
+        });
+      }, 100);
+      return;
+    }
 
     // ── Number line visual ──
     if (q.type === 'numberline') {
@@ -4924,13 +5407,26 @@ const Practice = {
       if (q.hint) html += `<div class="quiz-hint">💡 ${q.hint}</div>`;
       answerArea.innerHTML = html;
     } else if (q.type === 'fraction') {
-      answerArea.innerHTML = `
-        <input type="number" class="answer-input fraction-input" id="pfrac-num" placeholder="L" autocomplete="off" inputmode="numeric">
-        <span class="fraction-separator">/</span>
-        <input type="number" class="answer-input fraction-input" id="pfrac-den" placeholder="M" autocomplete="off" inputmode="numeric">
-        <button class="attack-btn" onclick="Practice.submit()">SPRAWDŹ ✓</button>`;
+      qText.innerHTML = `
+        <div style="font-size:15px;color:#aaa;margin-bottom:12px;">Skróć ułamek:</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+          <div class="frac-display">
+            <div class="frac-num">${q.displayNum}</div>
+            <div class="frac-line"></div>
+            <div class="frac-den">${q.displayDen}</div>
+          </div>
+          <span class="frac-arrow">=</span>
+          <div class="frac-input-stack">
+            <input type="number" id="pfrac-num" inputmode="numeric" autocomplete="off" placeholder="?">
+            <div class="frac-line"></div>
+            <input type="number" id="pfrac-den" inputmode="numeric" autocomplete="off" placeholder="?">
+          </div>
+        </div>
+      `;
+      qText.className = 'question-text';
+      answerArea.innerHTML = `<button class="attack-btn" onclick="Practice.submit()">SPRAWDŹ ✓</button>`;
       setTimeout(() => document.getElementById('pfrac-num').focus(), 100);
-      answerArea.querySelectorAll('input').forEach(inp => { inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') Practice.submit(); }); });
+      qText.querySelectorAll('input').forEach(inp => { inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') Practice.submit(); }); });
     } else {
       const isText = q.type === 'text';
       answerArea.innerHTML = `
@@ -4944,7 +5440,7 @@ const Practice = {
   submit() {
     const q = this.currentQ;
     let playerAnswer;
-    if (q.type === 'fraction') {
+    if (q.type === 'fraction' || q.type === 'fractionFigure') {
       const num = document.getElementById('pfrac-num').value.trim();
       const den = document.getElementById('pfrac-den').value.trim();
       if (!num || !den) return;
