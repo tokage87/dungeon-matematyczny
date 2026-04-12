@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/michalmatlosz/Downloads/**)",
+      "Bash(python3)",
+      "Bash(ls -lt /Users/michalmatlosz/Downloads/*.png)",
+      "Bash(python3 -c ':*)",
+      "Bash(sips -s format png \"/Users/michalmatlosz/Downloads/IMG_1473.HEIC\" --out /tmp/div_example.png)"
+    ]
+  }
+}
