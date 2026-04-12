@@ -1873,6 +1873,314 @@ body {
   .challenge-box, .quest-box { padding: 12px 10px; }
   .attack-choice-btn { font-size: 9px; padding: 10px 12px; }
 }
+
+/* ─── ACHIEVEMENTS PANEL ─── */
+#achievements-panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 160;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 0;
+}
+
+.achievements-box {
+  background: linear-gradient(145deg, #1a1040 0%, #0d0d2a 100%);
+  border: 3px solid #f0d060;
+  border-radius: 10px;
+  padding: 24px 20px;
+  width: min(620px, 95vw);
+  max-height: 95vh;
+  overflow-y: auto;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(240, 208, 96, 0.15);
+}
+
+.achievements-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: #f0d060;
+  margin-bottom: 16px;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.achievement-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0a0a20;
+  border: 2px solid #2a1860;
+  border-radius: 8px;
+  padding: 12px 14px;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.achievement-card.unlocked {
+  border-color: #f0d060;
+  background: linear-gradient(135deg, #1a1040 0%, #2a1a50 100%);
+  box-shadow: 0 0 10px rgba(240, 208, 96, 0.15);
+}
+
+.achievement-icon {
+  font-size: 28px;
+  min-width: 36px;
+  text-align: center;
+  filter: grayscale(1) opacity(0.3);
+}
+
+.achievement-card.unlocked .achievement-icon {
+  filter: none;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.achievement-card.unlocked .achievement-name {
+  color: #f0d060;
+}
+
+.achievement-desc {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.achievement-card.unlocked .achievement-desc {
+  color: #a0a0c0;
+}
+
+.achievement-date {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #4a8a4a;
+  white-space: nowrap;
+}
+
+.achievement-progress {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.achievement-card.unlocked .achievement-progress {
+  color: #4a8a4a;
+}
+
+/* Achievement unlock popup */
+.achievement-popup {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #2a1a50 0%, #1a1040 100%);
+  border: 3px solid #f0d060;
+  border-radius: 10px;
+  padding: 14px 24px;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 0 30px rgba(240, 208, 96, 0.4);
+  animation: achievePop 3s ease-out forwards;
+  pointer-events: none;
+}
+
+.achievement-popup .ach-pop-icon { font-size: 32px; }
+.achievement-popup .ach-pop-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #f0d060;
+  line-height: 1.6;
+}
+
+@keyframes achievePop {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+}
+
+/* ─── STATS PANEL ─── */
+#stats-panel {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 160;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 0;
+}
+
+.stats-box {
+  background: linear-gradient(145deg, #0a1a2a 0%, #0a0d1a 100%);
+  border: 3px solid #4488cc;
+  border-radius: 10px;
+  padding: 24px 20px;
+  width: min(650px, 95vw);
+  max-height: 95vh;
+  overflow-y: auto;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(68, 136, 204, 0.15);
+}
+
+.stats-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: #4488cc;
+  margin-bottom: 6px;
+}
+
+.stats-subtitle {
+  font-size: 13px;
+  color: #6688aa;
+  margin-bottom: 16px;
+}
+
+.stats-summary {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.stats-summary-item {
+  background: #0a0a20;
+  border: 2px solid #2a3a50;
+  border-radius: 8px;
+  padding: 12px 16px;
+  min-width: 120px;
+}
+
+.stats-summary-value {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+  color: #4488cc;
+  margin-bottom: 4px;
+}
+
+.stats-summary-label {
+  font-size: 11px;
+  color: #6688aa;
+}
+
+.stats-categories {
+  margin-bottom: 16px;
+}
+
+.stats-cat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #1a2a3a;
+}
+
+.stats-cat-icon {
+  font-size: 18px;
+  min-width: 26px;
+}
+
+.stats-cat-name {
+  font-size: 11px;
+  color: #8899aa;
+  min-width: 140px;
+  text-align: left;
+}
+
+.stats-cat-bar-shell {
+  flex: 1;
+  height: 16px;
+  background: #0a0a20;
+  border: 1px solid #2a3a50;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stats-cat-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.stats-cat-bar-fill.good { background: linear-gradient(90deg, #2a8a2a, #44cc44); }
+.stats-cat-bar-fill.ok { background: linear-gradient(90deg, #8a8a2a, #cccc44); }
+.stats-cat-bar-fill.bad { background: linear-gradient(90deg, #8a2a2a, #cc4444); }
+.stats-cat-bar-fill.none { background: #333; }
+
+.stats-cat-pct {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  min-width: 50px;
+  text-align: right;
+}
+
+.stats-cat-pct.good { color: #44cc44; }
+.stats-cat-pct.ok { color: #cccc44; }
+.stats-cat-pct.bad { color: #cc4444; }
+.stats-cat-pct.none { color: #555; }
+
+.stats-cat-count {
+  font-size: 10px;
+  color: #556677;
+  min-width: 60px;
+  text-align: right;
+}
+
+.stats-recommendation {
+  background: #0a1a2a;
+  border: 2px solid #2a4a6a;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.stats-rec-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #cc8844;
+  margin-bottom: 8px;
+}
+
+.stats-rec-text {
+  font-size: 13px;
+  color: #ccaa88;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .stats-cat-name { min-width: 80px; font-size: 9px; }
+  .stats-cat-count { display: none; }
+  .achievement-card { padding: 10px; gap: 8px; }
+  .achievement-icon { font-size: 22px; min-width: 28px; }
+  .achievement-name { font-size: 7px; }
+  .achievement-desc { font-size: 10px; }
+}
 </style>
 </head>
 <body>
@@ -1886,6 +2194,10 @@ body {
   <button class="menu-btn" onclick="Game.newGame()">NOWA GRA</button>
   <button class="menu-btn" id="continue-btn" onclick="Game.continueGame()" disabled>KONTYNUUJ</button>
   <button class="menu-btn" onclick="Practice.showCategories()" style="margin-top:10px;">📝 PYTANIA</button>
+  <div style="display:flex;gap:10px;margin-top:8px;">
+    <button class="menu-btn" onclick="Achievements.open()" style="font-size:10px;padding:10px 18px;">🏆 OSIĄGNIĘCIA</button>
+    <button class="menu-btn" onclick="Stats.open()" style="font-size:10px;padding:10px 18px;">📊 STATYSTYKI</button>
+  </div>
 </div>
 
 <!-- CHARACTER CREATION -->
@@ -1971,6 +2283,7 @@ body {
     <div class="hud-item" id="hud-xp">XP: 0/50</div>
     <div class="hud-item" id="hud-timer">⏱️ 0:00</div>
     <button class="hud-hero-btn" onclick="Hero.open()">🛡️</button>
+    <button class="hud-hero-btn" onclick="Stats.open()" title="Statystyki">📊</button>
   </div>
 </div>
 
@@ -2174,6 +2487,27 @@ body {
   <div style="font-size:14px; color:#a0a0c0; margin-bottom:30px;">Potwory były za silne... tym razem.</div>
   <button class="menu-btn" onclick="Game.retryFloor()">SPRÓBUJ PONOWNIE</button>
   <button class="menu-btn" onclick="Game.backToTitle()">MENU GŁÓWNE</button>
+</div>
+
+<!-- ACHIEVEMENTS PANEL -->
+<div id="achievements-panel">
+  <div class="achievements-box">
+    <div class="achievements-title">🏆 OSIĄGNIĘCIA</div>
+    <div class="achievement-grid" id="achievement-grid"></div>
+    <button class="menu-btn" onclick="Achievements.close()" style="font-size:10px;padding:10px 20px;">ZAMKNIJ</button>
+  </div>
+</div>
+
+<!-- STATS PANEL -->
+<div id="stats-panel">
+  <div class="stats-box">
+    <div class="stats-title">📊 STATYSTYKI</div>
+    <div class="stats-subtitle">Twoje postępy w nauce matematyki</div>
+    <div class="stats-summary" id="stats-summary"></div>
+    <div class="stats-categories" id="stats-categories"></div>
+    <div class="stats-recommendation" id="stats-recommendation"></div>
+    <button class="menu-btn" onclick="Stats.close()" style="font-size:10px;padding:10px 20px;">ZAMKNIJ</button>
+  </div>
 </div>
 
 <script>
@@ -4259,6 +4593,7 @@ const Hero = {
     Audio_.hit();
     Game.updateHUD();
     Game.saveState();
+    Achievements.checkEquipUpgrade();
     this.render();
   },
 
@@ -4603,6 +4938,7 @@ const Quest = {
       Audio_.hit();
       fb.textContent = 'Poprawnie! Dostajesz nagrodę! ✨';
       fb.className = 'feedback-text feedback-hit';
+      Stats.record('wordProblem', true);
 
       // Give reward
       let rewardMsg = '';
@@ -4642,6 +4978,7 @@ const Quest = {
       }, 1200);
     } else {
       Audio_.miss();
+      Stats.record('wordProblem', false);
       fb.textContent = 'To nie ta odpowiedź... spróbuj jeszcze raz!';
       fb.className = 'feedback-text feedback-miss';
       input.value = '';
@@ -4888,7 +5225,9 @@ const Battle = {
     const enabled = pool.filter(p => CatSelect.isEnabled(p.id));
     const list = enabled.length > 0 ? enabled : pool; // fallback to all if none enabled
     const item = list[Math.floor(Math.random() * list.length)];
-    return item.gen(floor);
+    const q = item.gen(floor);
+    q._categoryId = item.id;
+    return q;
   },
 
   genEasy(floor) {
@@ -5370,6 +5709,10 @@ const Battle = {
     fb.textContent = dmg >= 4 ? `Trafienie krytyczne! −${dmg} HP 💀` : `Trafienie! −${dmg} HP 💥`;
     fb.className = 'feedback-text feedback-hit';
     this.updateMonsterHP();
+    // Track stats
+    if (this.currentQuestion && this.currentQuestion._categoryId) {
+      Stats.record(this.currentQuestion._categoryId, true);
+    }
 
     const spriteImg = document.querySelector('.monster-sprite') || document.getElementById('monster-emoji');
     spriteImg.style.transform = 'scale(0.8)';
@@ -5386,6 +5729,10 @@ const Battle = {
     const fb = document.getElementById('feedback-text');
     Audio_.miss();
     this.flawless = false;
+    // Track stats
+    if (this.currentQuestion && this.currentQuestion._categoryId) {
+      Stats.record(this.currentQuestion._categoryId, false);
+    }
 
     const blockChance = Hero.getShieldBlockChance();
     const blocked = Math.random() < blockChance;
@@ -5499,8 +5846,13 @@ const Battle = {
     Game.updateHUD();
     Game.saveState();
 
+    // Achievement tracking
+    if (this.flawless) Achievements.checkFlawlessRoom();
+
     if (room.isBoss) {
       Game.recordBossTime(Game.currentFloor);
+      const bossTime = Game.bossTimes[Game.currentFloor];
+      Achievements.checkBossDefeated(Game.currentFloor, bossTime);
       Audio_.bossDefeat();
       spawnConfetti();
       if (Game.currentFloor < 3) {
@@ -6336,6 +6688,273 @@ const Practice = {
 
   updateScore() {
     document.getElementById('practice-score').textContent = `✅ ${this.correct}  /  ❌ ${this.wrong}`;
+  }
+};
+
+// ─── STATS TRACKING ───
+const Stats = {
+  _key: 'dungeonMath_stats',
+
+  _default() {
+    return { totalCorrect: 0, totalWrong: 0, categories: {} };
+  },
+
+  load() {
+    try {
+      const raw = localStorage.getItem(this._key);
+      return raw ? JSON.parse(raw) : this._default();
+    } catch(e) { return this._default(); }
+  },
+
+  save(data) {
+    localStorage.setItem(this._key, JSON.stringify(data));
+  },
+
+  record(categoryId, correct) {
+    const data = this.load();
+    if (correct) data.totalCorrect++;
+    else data.totalWrong++;
+    if (!data.categories[categoryId]) {
+      data.categories[categoryId] = { correct: 0, wrong: 0 };
+    }
+    if (correct) data.categories[categoryId].correct++;
+    else data.categories[categoryId].wrong++;
+    this.save(data);
+    Achievements.checkAfterAnswer(data);
+  },
+
+  open() {
+    if (Game.state === 'battle' || Game.state === 'quest') return;
+    this.render();
+    document.getElementById('stats-panel').style.display = 'flex';
+  },
+
+  close() {
+    document.getElementById('stats-panel').style.display = 'none';
+  },
+
+  render() {
+    const data = this.load();
+    const totalAttempts = data.totalCorrect + data.totalWrong;
+    const totalPct = totalAttempts > 0 ? Math.round((data.totalCorrect / totalAttempts) * 100) : 0;
+
+    // Summary
+    document.getElementById('stats-summary').innerHTML = `
+      <div class="stats-summary-item">
+        <div class="stats-summary-value">${data.totalCorrect}</div>
+        <div class="stats-summary-label">Poprawne</div>
+      </div>
+      <div class="stats-summary-item">
+        <div class="stats-summary-value">${totalAttempts}</div>
+        <div class="stats-summary-label">Wszystkie</div>
+      </div>
+      <div class="stats-summary-item">
+        <div class="stats-summary-value">${totalPct}%</div>
+        <div class="stats-summary-label">Trafność</div>
+      </div>
+    `;
+
+    // Categories
+    const cats = CatSelect.allCategories;
+    let html = '';
+    const weakCategories = [];
+
+    for (const cat of cats) {
+      const catData = data.categories[cat.id] || { correct: 0, wrong: 0 };
+      const attempts = catData.correct + catData.wrong;
+      const pct = attempts > 0 ? Math.round((catData.correct / attempts) * 100) : -1;
+
+      let pctClass, barClass;
+      if (pct < 0) { pctClass = 'none'; barClass = 'none'; }
+      else if (pct >= 80) { pctClass = 'good'; barClass = 'good'; }
+      else if (pct >= 50) { pctClass = 'ok'; barClass = 'ok'; }
+      else { pctClass = 'bad'; barClass = 'bad'; }
+
+      if (attempts >= 3 && pct < 70) weakCategories.push(cat.name);
+
+      html += `
+        <div class="stats-cat-row">
+          <div class="stats-cat-icon">${cat.icon}</div>
+          <div class="stats-cat-name">${cat.name}</div>
+          <div class="stats-cat-bar-shell">
+            <div class="stats-cat-bar-fill ${barClass}" style="width:${pct < 0 ? 0 : pct}%;"></div>
+          </div>
+          <div class="stats-cat-pct ${pctClass}">${pct < 0 ? '—' : pct + '%'}</div>
+          <div class="stats-cat-count">${catData.correct}/${attempts}</div>
+        </div>
+      `;
+    }
+    document.getElementById('stats-categories').innerHTML = html;
+
+    // Recommendation
+    const recEl = document.getElementById('stats-recommendation');
+    if (weakCategories.length > 0) {
+      recEl.innerHTML = `
+        <div class="stats-rec-title">💡 REKOMENDACJA</div>
+        <div class="stats-rec-text">Potrzebujesz więcej ćwiczeń z: <strong>${weakCategories.join(', ')}</strong>.<br>Spróbuj trybu "Pytania" aby poćwiczyć te kategorie!</div>
+      `;
+      recEl.style.display = 'block';
+    } else if (totalAttempts === 0) {
+      recEl.innerHTML = `
+        <div class="stats-rec-title">💡 REKOMENDACJA</div>
+        <div class="stats-rec-text">Zagraj kilka rund aby zobaczyć swoje statystyki!</div>
+      `;
+      recEl.style.display = 'block';
+    } else {
+      recEl.innerHTML = `
+        <div class="stats-rec-title">🌟 ŚWIETNA ROBOTA!</div>
+        <div class="stats-rec-text">Radzisz sobie dobrze we wszystkich kategoriach! Tak trzymaj!</div>
+      `;
+      recEl.style.display = 'block';
+    }
+  }
+};
+
+// ─── ACHIEVEMENTS ───
+const Achievements = {
+  _key: 'dungeonMath_achievements',
+
+  definitions: [
+    {
+      id: 'flawless',
+      icon: '⭐',
+      name: 'Bezbłędny',
+      desc: 'Oczyść pokój bez żadnego błędu',
+      check: (ctx) => ctx.event === 'flawlessRoom'
+    },
+    {
+      id: 'speedrunner',
+      icon: '⚡',
+      name: 'Speedrunner',
+      desc: 'Pokonaj piętro w mniej niż 3 minuty',
+      check: (ctx) => ctx.event === 'bossTime' && ctx.time < 180
+    },
+    {
+      id: 'mathematician',
+      icon: '🧮',
+      name: 'Matematyk',
+      desc: 'Odpowiedz poprawnie na 50 zadań łącznie',
+      check: (ctx) => ctx.event === 'answer' && ctx.stats.totalCorrect >= 50,
+      progress: (ctx) => ctx.stats ? `${Math.min(ctx.stats.totalCorrect, 50)}/50` : '0/50'
+    },
+    {
+      id: 'collector',
+      icon: '💎',
+      name: 'Kolekcjoner',
+      desc: 'W pełni ulepsz cały ekwipunek (4 sloty)',
+      check: (ctx) => {
+        if (ctx.event !== 'equipUpgrade') return false;
+        const eq = Game.player.equip;
+        return eq.sword >= 3 && eq.armor >= 3 && eq.shield >= 3 && eq.boots >= 3;
+      }
+    },
+    {
+      id: 'bossSlayer',
+      icon: '🏆',
+      name: 'Pogromca Bossów',
+      desc: 'Pokonaj wszystkie 3 bossy',
+      check: (ctx) => {
+        if (ctx.event !== 'bossDefeated') return false;
+        const bt = Game.bossTimes || {};
+        return bt[1] && bt[2] && bt[3];
+      }
+    },
+  ],
+
+  load() {
+    try {
+      const raw = localStorage.getItem(this._key);
+      return raw ? JSON.parse(raw) : {};
+    } catch(e) { return {}; }
+  },
+
+  save(data) {
+    localStorage.setItem(this._key, JSON.stringify(data));
+  },
+
+  unlock(id) {
+    const data = this.load();
+    if (data[id]) return; // already unlocked
+    data[id] = { date: new Date().toLocaleDateString('pl-PL') };
+    this.save(data);
+    this.showPopup(id);
+  },
+
+  showPopup(id) {
+    const def = this.definitions.find(d => d.id === id);
+    if (!def) return;
+    const popup = document.createElement('div');
+    popup.className = 'achievement-popup';
+    popup.innerHTML = `
+      <span class="ach-pop-icon">${def.icon}</span>
+      <div class="ach-pop-text">OSIĄGNIĘCIE!<br>${def.name}</div>
+    `;
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 3200);
+  },
+
+  trigger(eventCtx) {
+    const data = this.load();
+    for (const def of this.definitions) {
+      if (data[def.id]) continue; // already unlocked
+      if (def.check(eventCtx)) {
+        this.unlock(def.id);
+      }
+    }
+  },
+
+  checkAfterAnswer(stats) {
+    this.trigger({ event: 'answer', stats });
+  },
+
+  checkFlawlessRoom() {
+    this.trigger({ event: 'flawlessRoom' });
+  },
+
+  checkBossDefeated(floor, time) {
+    this.trigger({ event: 'bossDefeated', floor });
+    this.trigger({ event: 'bossTime', time, floor });
+  },
+
+  checkEquipUpgrade() {
+    this.trigger({ event: 'equipUpgrade' });
+  },
+
+  open() {
+    this.render();
+    document.getElementById('achievements-panel').style.display = 'flex';
+  },
+
+  close() {
+    document.getElementById('achievements-panel').style.display = 'none';
+  },
+
+  render() {
+    const data = this.load();
+    const stats = Stats.load();
+    const grid = document.getElementById('achievement-grid');
+    let html = '';
+
+    for (const def of this.definitions) {
+      const unlocked = !!data[def.id];
+      const dateStr = unlocked ? data[def.id].date : '';
+      const progressStr = !unlocked && def.progress ? def.progress({ stats }) : '';
+
+      html += `
+        <div class="achievement-card ${unlocked ? 'unlocked' : ''}">
+          <div class="achievement-icon">${def.icon}</div>
+          <div class="achievement-info">
+            <div class="achievement-name">${def.name}</div>
+            <div class="achievement-desc">${def.desc}</div>
+          </div>
+          ${unlocked
+            ? `<div class="achievement-date">${dateStr}</div>`
+            : (progressStr ? `<div class="achievement-progress">${progressStr}</div>` : '')
+          }
+        </div>
+      `;
+    }
+    grid.innerHTML = html;
   }
 };
 
