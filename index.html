@@ -176,43 +176,173 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.96);
   z-index: 150;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 20px 0;
+  padding: 18px 0;
 }
 
 .challenge-box {
-  background: linear-gradient(180deg, #1e1450 0%, #12103a 100%);
-  border: 3px solid #f0d060;
-  border-radius: 8px;
-  padding: 30px 36px;
-  width: min(680px, 95vw);
+  background: #050505;
+  border: 4px solid #ffffff;
+  border-radius: 0;
+  padding: 18px;
+  width: min(760px, 95vw);
   max-height: 95vh;
   overflow-y: auto;
-  text-align: center;
   position: relative;
-  box-shadow: 0 0 40px #f0d06022, inset 0 0 60px rgba(0,0,0,0.5);
+  box-shadow: 0 0 0 4px #050505, 0 0 0 8px #ffffff;
+}
+
+.battle-stage {
+  position: relative;
+  min-height: 340px;
+  margin-bottom: 14px;
+}
+
+.battle-platform {
+  position: absolute;
+  height: 8px;
+  background: #ffffff;
+  box-shadow: 0 4px 0 #050505, 0 8px 0 #ffffff;
+}
+
+.battle-platform.enemy {
+  width: 190px;
+  top: 112px;
+  left: 36px;
+}
+
+.battle-platform.player {
+  width: 240px;
+  bottom: 42px;
+  left: 36px;
+}
+
+.battle-status-box {
+  position: absolute;
+  background: #050505;
+  border: 4px solid #ffffff;
+  border-right-width: 10px;
+  border-bottom-width: 10px;
+  padding: 14px 18px 12px;
+  min-width: 250px;
+}
+
+.battle-status-box.enemy {
+  top: 10px;
+  left: 26px;
+}
+
+.battle-status-box.player {
+  right: 22px;
+  bottom: 62px;
+  min-width: 290px;
+}
+
+.battle-status-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.battle-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.battle-level {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.battle-hp-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.battle-hp-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.battle-hp-shell {
+  flex: 1;
+  height: 14px;
+  background: #050505;
+  border: 3px solid #ffffff;
+  padding: 1px;
+}
+
+.battle-hp-bar {
+  height: 100%;
+  width: 100%;
+  background: #58b858;
+  transition: width 0.35s ease, background 0.35s ease;
+}
+
+.battle-hp-value {
+  margin-top: 8px;
+  text-align: right;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #ffffff;
 }
 
 .monster-area {
-  margin-bottom: 20px;
+  position: absolute;
+  top: 108px;
+  right: 70px;
+  width: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 2;
+}
+
+.player-battle-area {
+  position: absolute;
+  left: 72px;
+  bottom: 70px;
+  width: 180px;
+  height: 150px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 2;
+}
+
+.player-battle-sprite canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.player-battle-sprite {
+  transform: scaleX(-1);
 }
 
 .monster-emoji {
   font-size: 64px;
   display: block;
-  margin-bottom: 8px;
   animation: monsterIdle 1.5s ease-in-out infinite;
   line-height: 1;
 }
 
 .monster-sprite {
   display: block;
-  margin: 0 auto 8px;
+  margin: 0 auto;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
@@ -224,40 +354,50 @@ body {
 
 .monster-name {
   font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  color: #ff6060;
-  margin-bottom: 8px;
+  font-size: 8px;
+  color: #d8d8d8;
+  line-height: 1.5;
+  margin: -2px 0 8px;
 }
 
-.hp-bar-container {
-  width: 200px;
-  height: 16px;
-  background: #2a1a3a;
-  border: 2px solid #555;
-  border-radius: 3px;
-  margin: 0 auto;
-  overflow: hidden;
+.battle-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 0;
 }
 
-.hp-bar-fill {
-  height: 100%;
-  background: linear-gradient(180deg, #ff4444 0%, #cc2222 100%);
-  transition: width 0.5s ease;
+.battle-box {
+  background: #050505;
+  border: 4px solid #ffffff;
+  min-height: 160px;
+  padding: 16px 18px;
 }
 
-.hp-text {
+.battle-message-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.battle-prompt {
   font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
-  color: #ff8888;
-  margin-top: 4px;
+  font-size: 14px;
+  color: #ffffff;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.battle-command-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .challenge-question {
-  background: #0a0a20;
-  border: 2px solid #3a2860;
-  border-radius: 6px;
-  padding: 24px 28px;
-  margin: 20px 0;
+  background: #050505;
+  border: 4px solid #ffffff;
+  padding: 18px 20px;
+  margin: 0;
   min-height: 80px;
   display: flex;
   flex-direction: column;
@@ -266,7 +406,7 @@ body {
 }
 
 .question-text {
-  font-size: 22px;
+  font-size: 20px;
   color: #ffffff;
   line-height: 1.6;
   white-space: pre-line;
@@ -789,64 +929,115 @@ body {
 
 /* ─── ATTACK CHOICE ─── */
 #attack-choice {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin: 16px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
 }
 
 .attack-choice-btn {
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  padding: 14px 16px;
-  border-radius: 6px;
+  font-size: 11px;
+  padding: 16px 14px;
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.2s;
-  width: 175px;
-  text-align: center;
-  line-height: 1.7;
-  border: 2px solid;
+  width: 100%;
+  text-align: left;
+  line-height: 1.6;
+  border: 4px solid #201628;
+  box-shadow: inset -4px -4px 0 rgba(0,0,0,0.12);
 }
 
 .attack-choice-btn:hover {
-  transform: scale(1.06);
-  filter: brightness(1.2);
+  transform: translate(-2px, -2px);
+  filter: brightness(1.03);
 }
 
 .attack-easy {
-  background: linear-gradient(180deg, #1a5a1a 0%, #0e3a0e 100%);
-  border-color: #44cc44;
-  color: #88ff88;
+  background: #111111;
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .attack-medium {
-  background: linear-gradient(180deg, #5a4a10 0%, #3a3008 100%);
-  border-color: #ddaa22;
-  color: #ffdd66;
+  background: #111111;
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .attack-hard {
-  background: linear-gradient(180deg, #5a1a1a 0%, #3a0808 100%);
-  border-color: #dd4444;
-  color: #ff8888;
+  background: #111111;
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .dmg-badge {
   display: inline-block;
   font-size: 9px;
   padding: 2px 6px;
-  border-radius: 3px;
+  border-radius: 0;
   margin-top: 6px;
-  background: rgba(0,0,0,0.4);
+  background: rgba(255,255,255,0.12);
+}
+
+#potion-battle-btn {
+  margin-top: 0;
+}
+
+.attack-choice-btn.potion-btn {
+  background: #111111;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.attack-choice-btn.potion-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .feedback-text {
   font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
+  font-size: 10px;
   min-height: 24px;
-  margin-top: 15px;
+  margin-top: 12px;
   transition: all 0.3s;
+  color: #ffffff;
+}
+
+#challenge-panel .answer-input {
+  background: #050505;
+  color: #ffffff;
+  border: 3px solid #ffffff;
+}
+
+#challenge-panel .answer-input:focus {
+  box-shadow: 0 0 0 2px #050505, 0 0 0 4px #ffffff;
+}
+
+#challenge-panel .attack-btn {
+  background: #111111;
+  color: #ffffff;
+  border: 3px solid #ffffff;
+}
+
+#challenge-panel .attack-btn:hover {
+  background: #1b1b1b;
+}
+
+#challenge-panel .quiz-answer-btn {
+  background: #050505;
+  color: #ffffff;
+  border: 3px solid #ffffff;
+}
+
+#challenge-panel .quiz-answer-btn:hover {
+  background: #151515;
+  border-color: #ffffff;
+}
+
+#challenge-panel .quiz-hint {
+  color: #d0d0d0;
 }
 
 .feedback-hit { color: #44ff44; }
@@ -1573,11 +1764,22 @@ body {
     border-radius: 6px;
   }
 
+  .battle-stage { min-height: 260px; margin-bottom: 10px; }
+  .battle-platform.enemy { width: 130px; top: 92px; left: 18px; }
+  .battle-platform.player { width: 160px; left: 20px; bottom: 28px; }
+  .battle-status-box { min-width: 0; padding: 10px 12px 8px; }
+  .battle-status-box.enemy { top: 8px; left: 10px; width: 180px; }
+  .battle-status-box.player { right: 10px; bottom: 46px; width: 200px; }
+  .battle-name { font-size: 10px; }
+  .battle-level, .battle-hp-label, .battle-hp-value { font-size: 8px; }
+  .monster-area { top: 100px; right: 18px; width: 120px; }
+  .player-battle-area { left: 28px; bottom: 52px; width: 120px; height: 110px; }
   .monster-emoji { font-size: 48px; }
   .monster-sprite { max-width: 72px !important; }
   .monster-name { font-size: 10px; }
-  .hp-bar-container { width: 160px; height: 14px; }
-  .hp-text { font-size: 8px; }
+  .battle-bottom { grid-template-columns: 1fr; }
+  .battle-box { min-height: 0; padding: 12px; }
+  .battle-prompt { font-size: 10px; }
 
   .challenge-question, .quest-question { padding: 14px 12px; margin: 12px 0; }
   .question-text { font-size: 17px; }
@@ -1604,12 +1806,9 @@ body {
 
   #attack-choice {
     gap: 8px;
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
   }
   .attack-choice-btn {
-    width: 90%;
-    max-width: 280px;
     font-size: 10px;
     padding: 12px 14px;
     line-height: 1.5;
@@ -1790,51 +1989,90 @@ body {
 <!-- CHALLENGE PANEL -->
 <div id="challenge-panel">
   <div class="challenge-box">
-    <div class="monster-area">
-      <span class="monster-emoji" id="monster-emoji"></span>
-      <div class="monster-name" id="monster-name"></div>
-      <div class="hp-bar-container">
-        <div class="hp-bar-fill" id="monster-hp-bar"></div>
+    <div class="battle-stage">
+      <div class="battle-platform enemy"></div>
+      <div class="battle-platform player"></div>
+
+      <div class="battle-status-box enemy">
+        <div class="battle-status-head">
+          <div class="battle-name" id="monster-name"></div>
+          <div class="battle-level" id="monster-level-display">Lv.1</div>
+        </div>
+        <div class="monster-name" id="monster-extra-info"></div>
+        <div class="battle-hp-row">
+          <div class="battle-hp-label">HP:</div>
+          <div class="battle-hp-shell">
+            <div class="battle-hp-bar" id="monster-hp-bar"></div>
+          </div>
+        </div>
+        <div class="battle-hp-value" id="monster-hp-text"></div>
       </div>
-      <div class="hp-text" id="monster-hp-text"></div>
-    </div>
 
-    <!-- TASK PREVIEW (boots lvl 3) -->
-    <div id="task-preview" style="display:none; background:#0a0a20; border:1px solid #4a3860; border-radius:5px; padding:10px 14px; margin-bottom:10px;">
-      <div style="font-family:'Press Start 2P',monospace; font-size:8px; color:#8866aa; margin-bottom:6px;">👢 PODGLĄD ZADANIA:</div>
-      <div id="task-preview-text" style="font-size:14px; color:#aaaacc; white-space:pre-line;"></div>
-    </div>
-
-    <!-- ATTACK CHOICE (phase 1) -->
-    <div id="attack-choice">
-      <button class="attack-choice-btn attack-easy" onclick="Battle.chooseAttack('easy')">
-        ⚔️ Lekki atak<br><span class="dmg-badge">1 DMG</span>
-      </button>
-      <button class="attack-choice-btn attack-medium" onclick="Battle.chooseAttack('medium')">
-        🗡️ Mocny atak<br><span class="dmg-badge">2 DMG</span>
-      </button>
-      <button class="attack-choice-btn attack-hard" onclick="Battle.chooseAttack('hard')" id="attack-hard-btn">
-        💥 Potężny atak<br><span class="dmg-badge" id="hard-dmg-label">3 DMG</span>
-      </button>
-    </div>
-    <div id="potion-battle-btn" style="display:none; margin-top:10px;">
-      <button class="attack-choice-btn" onclick="Battle.usePotion()" style="background:linear-gradient(180deg,#2a4a2a 0%,#1a2a1a 100%); border-color:#44cc44; color:#88ff88; width:auto; padding:10px 20px;">
-        🧪 Szalona Mikstura <span style="font-size:8px;opacity:0.7;" id="potion-count-battle">(0)</span>
-      </button>
-    </div>
-
-    <!-- QUESTION (phase 2) -->
-    <div id="question-phase" style="display:none;">
-      <div class="challenge-question">
-        <div class="question-text" id="question-text"></div>
+      <div class="monster-area">
+        <span class="monster-emoji" id="monster-emoji"></span>
       </div>
-      <div class="answer-area" id="answer-area">
-        <input type="text" class="answer-input" id="answer-input" autocomplete="off" inputmode="text">
-        <button class="attack-btn" onclick="Battle.submitAnswer()">ATAKUJ! ⚔️</button>
+
+      <div class="player-battle-area">
+        <div class="player-battle-sprite" id="player-battle-sprite"></div>
+      </div>
+
+      <div class="battle-status-box player">
+        <div class="battle-status-head">
+          <div class="battle-name" id="player-battle-name">Bohater</div>
+          <div class="battle-level" id="player-battle-level">Lv.1</div>
+        </div>
+        <div class="battle-hp-row">
+          <div class="battle-hp-label">HP:</div>
+          <div class="battle-hp-shell">
+            <div class="battle-hp-bar" id="player-hp-bar"></div>
+          </div>
+        </div>
+        <div class="battle-hp-value" id="player-hp-text">3/3</div>
       </div>
     </div>
 
-    <div class="feedback-text" id="feedback-text"></div>
+    <div class="battle-bottom">
+      <div class="battle-box battle-message-box">
+        <div class="battle-prompt" id="battle-prompt">Co zrobi bohater?</div>
+
+        <!-- TASK PREVIEW (boots lvl 3) -->
+        <div id="task-preview" style="display:none; background:#050505; border:4px solid #ffffff; padding:10px 12px; margin-bottom:10px;">
+          <div style="font-family:'Press Start 2P',monospace; font-size:8px; color:#ffffff; margin-bottom:6px;">PODGLĄD ATAKÓW</div>
+          <div id="task-preview-text" style="font-size:13px; color:#ffffff; white-space:pre-line; line-height:1.6;"></div>
+        </div>
+
+        <!-- QUESTION (phase 2) -->
+        <div id="question-phase" style="display:none;">
+          <div class="challenge-question">
+            <div class="question-text" id="question-text"></div>
+          </div>
+          <div class="answer-area" id="answer-area">
+            <input type="text" class="answer-input" id="answer-input" autocomplete="off" inputmode="text">
+            <button class="attack-btn" onclick="Battle.submitAnswer()">ATAKUJ! ⚔️</button>
+          </div>
+        </div>
+
+        <div class="feedback-text" id="feedback-text"></div>
+      </div>
+
+      <div class="battle-box battle-command-box">
+        <!-- ATTACK CHOICE (phase 1) -->
+        <div id="attack-choice">
+          <button class="attack-choice-btn battle-attack-btn attack-easy" onclick="Battle.chooseAttack('easy')">
+            ▶ Lekki atak<br><span class="dmg-badge" id="easy-dmg-label">1 DMG</span>
+          </button>
+          <button class="attack-choice-btn battle-attack-btn attack-medium" onclick="Battle.chooseAttack('medium')">
+            ▶ Mocny atak<br><span class="dmg-badge" id="medium-dmg-label">2 DMG</span>
+          </button>
+          <button class="attack-choice-btn battle-attack-btn attack-hard" onclick="Battle.chooseAttack('hard')" id="attack-hard-btn">
+            ▶ Potężny atak<br><span class="dmg-badge" id="hard-dmg-label">3 DMG</span>
+          </button>
+          <button class="attack-choice-btn potion-btn" onclick="Battle.usePotion()" id="potion-battle-btn">
+            ▶ Mikstura<br><span class="dmg-badge" id="potion-count-battle">(0)</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3885,9 +4123,14 @@ const Hero = {
 
   drawHeroSprite() {
     const area = document.getElementById('hero-sprite-area');
+    const c = this.createSpriteCanvas(7);
+    area.innerHTML = '';
+    area.appendChild(c);
+  },
+
+  createSpriteCanvas(px = 7) {
     const eq = Game.player.equip;
     const app = Game.player.appearance || { gender: 'm', skin: 0, hat: 0, tunic: 2, boots: 0 };
-
     // Get sprite based on gender
     const base = (app.gender === 'f') ? [
       '......aaaa......',
@@ -3958,7 +4201,6 @@ const Hero = {
     else palette.e = bootsColors[app.boots] || bootsColors[0];
 
     const c = document.createElement('canvas');
-    const px = 7;
     const cols = Math.max(...base.map(r => r.length));
     c.width = cols * px;
     c.height = base.length * px;
@@ -3995,8 +4237,7 @@ const Hero = {
       ctx.fillRect(2 * px, 13 * px, px, px);
     }
 
-    area.innerHTML = '';
-    area.appendChild(c);
+    return c;
   },
 
   upgrade(slot) {
@@ -4439,6 +4680,9 @@ const Battle = {
 
     Game.state = 'battle';
 
+    const playerSpriteArea = document.getElementById('player-battle-sprite');
+    playerSpriteArea.innerHTML = '';
+    playerSpriteArea.appendChild(Hero.createSpriteCanvas(6));
     // Render animated pixel-art monster
     const monsterArea = document.getElementById('monster-emoji');
     const imgSize = room.isBoss ? 120 : 96;
@@ -4448,9 +4692,12 @@ const Battle = {
     PixelArt.startAnimation();
     const immuneNames = { easy: 'lekki atak', medium: 'mocny atak', hard: 'potężny atak' };
     const immuneType = room.monster.immune;
-    document.getElementById('monster-name').innerHTML = room.monster.name +
-      (room.monster.onlyEasy ? `<div class="monster-immune-info">⚔️ Tylko lekki atak działa!</div>`
-        : immuneType ? `<div class="monster-immune-info">🛡️ Odporny na: ${immuneNames[immuneType]}</div>` : '');
+    document.getElementById('monster-name').textContent = room.monster.name;
+    document.getElementById('monster-extra-info').textContent =
+      room.monster.onlyEasy ? 'Tylko lekki atak działa!'
+        : immuneType ? `Odporny na: ${immuneNames[immuneType]}` : '';
+    document.getElementById('monster-level-display').textContent = `Lv.${room.isBoss ? Game.currentFloor + 2 : Game.currentFloor}`;
+    this.updatePlayerBattleUI();
     this.updateMonsterHP();
 
     // Show attack choice, hide question
@@ -4461,8 +4708,10 @@ const Battle = {
   },
 
   showAttackChoice() {
-    document.getElementById('attack-choice').style.display = 'flex';
+    document.getElementById('attack-choice').style.display = 'grid';
     document.getElementById('question-phase').style.display = 'none';
+    document.getElementById('battle-prompt').textContent = 'Co zrobi bohater?';
+    this.updatePlayerBattleUI();
 
     // Update DMG labels with level + sword bonus
     const lvlBonus = Math.max(0, Game.player.level - 1);
@@ -4470,15 +4719,10 @@ const Battle = {
     const easyDmg = 1 + lvlBonus + swordBonus;
     const medDmg = 2 + lvlBonus + swordBonus;
     const hardDmg = 3 + lvlBonus + swordBonus;
-    const btns = document.querySelectorAll('.dmg-badge');
-    btns[0].textContent = `${easyDmg} DMG`;
-    btns[1].textContent = `${medDmg} DMG`;
+    document.getElementById('easy-dmg-label').textContent = `${easyDmg} DMG`;
+    document.getElementById('medium-dmg-label').textContent = `${medDmg} DMG`;
     const hardLabel = document.getElementById('hard-dmg-label');
-    if (this.currentRoom && !this.currentRoom.isBoss) {
-      hardLabel.textContent = `${hardDmg} DMG`;
-    } else {
-      hardLabel.textContent = `${hardDmg} DMG`;
-    }
+    hardLabel.textContent = `${hardDmg} DMG`;
 
     // Boots tier 3: show preview of available tasks
     const preview = document.getElementById('task-preview');
@@ -4510,7 +4754,7 @@ const Battle = {
     const immuneLabels = { easy: 'Lekki', medium: 'Mocny', hard: 'Potężny' };
     const diffKeys = ['easy', 'medium', 'hard'];
 
-    document.querySelectorAll('.attack-choice-btn').forEach((btn, i) => {
+    document.querySelectorAll('.battle-attack-btn').forEach((btn, i) => {
       btn.disabled = false;
       btn.style.opacity = '1';
       btn.style.cursor = 'pointer';
@@ -4536,7 +4780,7 @@ const Battle = {
     const onlyEasyMonster = this.currentRoom?.monster?.onlyEasy;
     if (this.lastAttack && !onlyEasyMonster) {
       const map = { easy: 0, medium: 1, hard: 2 };
-      const btn = document.querySelectorAll('.attack-choice-btn')[map[this.lastAttack]];
+      const btn = document.querySelectorAll('.battle-attack-btn')[map[this.lastAttack]];
       if (btn && !btn.disabled) {
         btn.disabled = true;
         btn.style.opacity = '0.35';
@@ -4546,11 +4790,16 @@ const Battle = {
 
     // Show/hide potion button
     const potionBtn = document.getElementById('potion-battle-btn');
+    potionBtn.disabled = false;
+    potionBtn.style.opacity = '1';
+    potionBtn.style.cursor = 'pointer';
     if (Game.player.potions > 0) {
-      potionBtn.style.display = 'block';
       document.getElementById('potion-count-battle').textContent = `(${Game.player.potions})`;
     } else {
-      potionBtn.style.display = 'none';
+      potionBtn.disabled = true;
+      potionBtn.style.opacity = '0.35';
+      potionBtn.style.cursor = 'not-allowed';
+      document.getElementById('potion-count-battle').textContent = '(0)';
     }
   },
 
@@ -4580,6 +4829,7 @@ const Battle = {
     document.getElementById('attack-choice').style.display = 'none';
     document.getElementById('question-phase').style.display = 'block';
     document.getElementById('feedback-text').textContent = '';
+    document.getElementById('battle-prompt').textContent = 'Rozwiąż zadanie, żeby zaatakować!';
 
     this.renderQuestion();
   },
@@ -5016,6 +5266,7 @@ const Battle = {
     Audio_.potion();
     Game.updateHUD();
     Game.saveState();
+    this.updatePlayerBattleUI();
 
     // Refresh attack choice (update potion button visibility)
     if (this.monsterHP > 0) {
@@ -5147,6 +5398,7 @@ const Battle = {
       fb.className = 'feedback-text feedback-miss';
       Game.player.hp--;
       Game.updateHUD();
+      this.updatePlayerBattleUI();
 
       document.querySelector('.challenge-box').classList.add('shake');
       setTimeout(() => document.querySelector('.challenge-box').classList.remove('shake'), 400);
@@ -5186,7 +5438,20 @@ const Battle = {
   updateMonsterHP() {
     const pct = (this.monsterHP / this.monsterMaxHP) * 100;
     document.getElementById('monster-hp-bar').style.width = pct + '%';
-    document.getElementById('monster-hp-text').textContent = `HP: ${this.monsterHP}/${this.monsterMaxHP}`;
+    document.getElementById('monster-hp-text').textContent = `${this.monsterHP}/${this.monsterMaxHP}`;
+    const bar = document.getElementById('monster-hp-bar');
+    bar.style.background = pct <= 20 ? '#d05050' : pct <= 50 ? '#d0b040' : '#58b858';
+  },
+
+  updatePlayerBattleUI() {
+    const app = Game.player.appearance || {};
+    document.getElementById('player-battle-name').textContent = app.name || 'Bohater';
+    document.getElementById('player-battle-level').textContent = `Lv.${Game.player.level}`;
+    const pct = (Game.player.hp / Game.player.maxHp) * 100;
+    const bar = document.getElementById('player-hp-bar');
+    bar.style.width = pct + '%';
+    bar.style.background = pct <= 20 ? '#d05050' : pct <= 50 ? '#d0b040' : '#58b858';
+    document.getElementById('player-hp-text').textContent = `${Game.player.hp}/${Game.player.maxHp}`;
   },
 
   monsterDefeated() {
