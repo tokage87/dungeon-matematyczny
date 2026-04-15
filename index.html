@@ -3993,6 +3993,283 @@ function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// ─── GERMAN QUESTION GENERATORS ───
+const GermanGen = {
+  _used: {},
+  _pick(bank, key) {
+    if (!this._used[key]) this._used[key] = [];
+    if (this._used[key].length >= bank.length) this._used[key] = [];
+    const avail = bank.filter((_, i) => !this._used[key].includes(i));
+    const idx = bank.indexOf(avail[Math.floor(Math.random() * avail.length)]);
+    this._used[key].push(idx);
+    return bank[idx];
+  },
+
+  // ── U1: Zdania o sobie ──
+  u1t1Bank: [
+    { template: 'Ich ___ Szymon.', options: ['heiße', 'bin', 'habe', 'wohne'], answer: 'heiße', hint: 'Ich heiße... = Mam na imię...' },
+    { template: 'Ich ___ 10 Jahre alt.', options: ['heiße', 'bin', 'habe', 'wohne'], answer: 'bin', hint: 'Ich bin... Jahre alt = Mam... lat' },
+    { template: 'Ich ___ in Wrocław.', options: ['heiße', 'bin', 'habe', 'wohne'], answer: 'wohne', hint: 'Ich wohne in... = Mieszkam w...' },
+    { template: 'Ich ___ einen Hund.', options: ['heiße', 'bin', 'habe', 'wohne'], answer: 'habe', hint: 'Ich habe... = Mam...' },
+    { template: 'Mein Hobby ___ Fußball.', options: ['ist', 'bin', 'habe', 'heißt'], answer: 'ist', hint: 'Mein Hobby ist... = Moje hobby to...' },
+    { template: 'Ich ___ gern Musik.', options: ['höre', 'heiße', 'wohne', 'bin'], answer: 'höre', hint: 'Ich höre gern... = Lubię słuchać...' },
+    { template: 'Ich ___ in die vierte Klasse.', options: ['gehe', 'bin', 'habe', 'wohne'], answer: 'gehe', hint: 'Ich gehe in die... Klasse = Chodzę do... klasy' },
+    { template: 'Meine Lieblingsfarbe ___ blau.', options: ['ist', 'bin', 'habe', 'heißt'], answer: 'ist', hint: 'Meine Lieblingsfarbe ist... = Mój ulubiony kolor to...' },
+  ],
+  u1t2Bank: [
+    { polish: 'Mam na imię Szymon.', options: ['Ich heiße Szymon.', 'Ich bin Szymon Jahre.', 'Ich wohne Szymon.', 'Ich habe Szymon.'], answer: 'Ich heiße Szymon.' },
+    { polish: 'Mam 10 lat.', options: ['Ich habe 10 Jahre.', 'Ich bin 10 Jahre alt.', 'Ich heiße 10 Jahre.', 'Ich wohne 10 Jahre.'], answer: 'Ich bin 10 Jahre alt.' },
+    { polish: 'Mieszkam w Polsce.', options: ['Ich bin in Polen.', 'Ich heiße Polen.', 'Ich wohne in Polen.', 'Ich habe Polen.'], answer: 'Ich wohne in Polen.' },
+    { polish: 'Mam brata i siostrę.', options: ['Ich bin Bruder und Schwester.', 'Ich habe einen Bruder und eine Schwester.', 'Ich heiße Bruder.', 'Ich wohne Bruder und Schwester.'], answer: 'Ich habe einen Bruder und eine Schwester.' },
+    { polish: 'Lubię grać w piłkę nożną.', options: ['Ich spiele gern Fußball.', 'Ich heiße Fußball.', 'Ich bin Fußball.', 'Ich wohne Fußball.'], answer: 'Ich spiele gern Fußball.' },
+    { polish: 'Chodzę do czwartej klasy.', options: ['Ich gehe in die vierte Klasse.', 'Ich bin vierte Klasse.', 'Ich habe vierte Klasse.', 'Ich heiße vierte Klasse.'], answer: 'Ich gehe in die vierte Klasse.' },
+    { polish: 'Moje ulubione jedzenie to pizza.', options: ['Ich heiße Pizza.', 'Mein Lieblingsessen ist Pizza.', 'Ich wohne Pizza.', 'Ich bin Pizza alt.'], answer: 'Mein Lieblingsessen ist Pizza.' },
+    { polish: 'Mam psa.', options: ['Ich bin einen Hund.', 'Ich habe einen Hund.', 'Ich heiße Hund.', 'Ich wohne Hund.'], answer: 'Ich habe einen Hund.' },
+  ],
+  u1t3Bank: [
+    { words: ['heiße', 'Ich', 'Szymon'], answer: 'Ich heiße Szymon', hint: 'Ich heiße... = Mam na imię...' },
+    { words: ['bin', '10', 'alt', 'Ich', 'Jahre'], answer: 'Ich bin 10 Jahre alt', hint: 'Ich bin... Jahre alt = Mam... lat' },
+    { words: ['in', 'wohne', 'Wrocław', 'Ich'], answer: 'Ich wohne in Wrocław', hint: 'Ich wohne in... = Mieszkam w...' },
+    { words: ['gern', 'spiele', 'Fußball', 'Ich'], answer: 'Ich spiele gern Fußball', hint: 'Ich spiele gern... = Lubię grać w...' },
+    { words: ['einen', 'Ich', 'Hund', 'habe'], answer: 'Ich habe einen Hund', hint: 'Ich habe... = Mam...' },
+    { words: ['Hobby', 'Mein', 'ist', 'Schwimmen'], answer: 'Mein Hobby ist Schwimmen', hint: 'Mein Hobby ist... = Moje hobby to...' },
+    { words: ['die', 'Ich', 'in', 'gehe', 'Klasse', 'vierte'], answer: 'Ich gehe in die vierte Klasse', hint: 'Ich gehe in die... Klasse = Chodzę do... klasy' },
+    { words: ['Lieblingsfarbe', 'ist', 'Meine', 'grün'], answer: 'Meine Lieblingsfarbe ist grün', hint: 'Meine Lieblingsfarbe ist... = Mój ulubiony kolor to...' },
+  ],
+
+  // ── U2: Słownictwo ──
+  u2t1Bank: [
+    { polish: 'imię', options: ['der Name', 'das Alter', 'die Schule', 'das Hobby'], answer: 'der Name' },
+    { polish: 'wiek / lata', options: ['das Alter', 'der Name', 'die Farbe', 'das Essen'], answer: 'das Alter' },
+    { polish: 'szkoła', options: ['die Schule', 'der Hund', 'das Hobby', 'der Name'], answer: 'die Schule' },
+    { polish: 'hobby', options: ['das Hobby', 'die Schule', 'der Sport', 'das Essen'], answer: 'das Hobby' },
+    { polish: 'brat', options: ['der Bruder', 'die Schwester', 'der Vater', 'die Mutter'], answer: 'der Bruder' },
+    { polish: 'siostra', options: ['die Schwester', 'der Bruder', 'die Mutter', 'der Vater'], answer: 'die Schwester' },
+    { polish: 'mama', options: ['die Mutter', 'der Vater', 'die Schwester', 'die Oma'], answer: 'die Mutter' },
+    { polish: 'tata', options: ['der Vater', 'die Mutter', 'der Bruder', 'der Opa'], answer: 'der Vater' },
+    { polish: 'pies', options: ['der Hund', 'die Katze', 'der Vogel', 'das Pferd'], answer: 'der Hund' },
+    { polish: 'kot', options: ['die Katze', 'der Hund', 'die Maus', 'der Fisch'], answer: 'die Katze' },
+  ],
+  u2t2Bank: [
+    { german: 'die Lieblingsfarbe', options: ['ulubiony kolor', 'ulubione jedzenie', 'ulubiony sport', 'ulubiona muzyka'], answer: 'ulubiony kolor' },
+    { german: 'das Lieblingsessen', options: ['ulubione jedzenie', 'ulubiony kolor', 'ulubiony film', 'ulubiony sport'], answer: 'ulubione jedzenie' },
+    { german: 'die Freunde', options: ['przyjaciele', 'rodzina', 'szkoła', 'hobby'], answer: 'przyjaciele' },
+    { german: 'die Familie', options: ['rodzina', 'przyjaciele', 'szkoła', 'dom'], answer: 'rodzina' },
+    { german: 'die Musik', options: ['muzyka', 'sport', 'szkoła', 'taniec'], answer: 'muzyka' },
+    { german: 'schwimmen', options: ['pływać', 'biegać', 'skakać', 'tańczyć'], answer: 'pływać' },
+    { german: 'lesen', options: ['czytać', 'pisać', 'liczyć', 'rysować'], answer: 'czytać' },
+    { german: 'spielen', options: ['grać', 'spać', 'jeść', 'pić'], answer: 'grać' },
+    { german: 'tanzen', options: ['tańczyć', 'śpiewać', 'biegać', 'pływać'], answer: 'tańczyć' },
+    { german: 'zeichnen', options: ['rysować', 'czytać', 'pisać', 'liczyć'], answer: 'rysować' },
+  ],
+  u2t3Bank: [
+    { polish: 'piłka nożna', answer: 'Fußball', hint: 'Fuß = stopa, Ball = piłka' },
+    { polish: 'ulubiony kolor', answer: 'Lieblingsfarbe', hint: 'Lieblings- = ulubiony, Farbe = kolor' },
+    { polish: 'rodzeństwo', answer: 'Geschwister', hint: 'Geschwister = rodzeństwo' },
+    { polish: 'pies', answer: 'Hund', hint: 'der Hund' },
+    { polish: 'kot', answer: 'Katze', hint: 'die Katze' },
+    { polish: 'szkoła', answer: 'Schule', hint: 'die Schule' },
+  ],
+
+  // ── L1: Deutschland ──
+  deText: 'Deutschland ist ein Land in Europa.\nDie Hauptstadt von Deutschland ist Berlin.\nIn Deutschland leben etwa 84 Millionen Menschen.\n\nDie deutsche Flagge ist schwarz, rot und goldig.\nIn Deutschland spricht man Deutsch.\n\nViele Menschen arbeiten und lernen.\nBeliebt sind Fußball und Musik.\n\nTypisches Essen in Deutschland ist Wurst und Brot.\nDeutschland ist ein schönes Land.',
+  l1t1Bank: [
+    { question: 'Gdzie leży Niemcy (Deutschland)?', options: ['In Europa', 'In Asien', 'In Afrika', 'In Amerika'], answer: 'In Europa' },
+    { question: 'Jak nazywa się stolica Niemiec?', options: ['Berlin', 'Wien', 'Bern', 'Warschau'], answer: 'Berlin' },
+    { question: 'Ile ludzi mieszka w Niemczech?', options: ['etwa 84 Millionen', 'etwa 9 Millionen', 'etwa 8 Millionen', 'etwa 38 Millionen'], answer: 'etwa 84 Millionen' },
+  ],
+  l1t2Bank: [
+    { question: 'Welche Farben hat die deutsche Flagge?', questionPL: '(Jakie kolory ma niemiecka flaga?)', options: ['Schwarz, rot und goldig', 'Weiß und rot', 'Blau, weiß und rot', 'Rot und weiß'], answer: 'Schwarz, rot und goldig' },
+    { question: 'Welche Sprache spricht man in Deutschland?', questionPL: '(Jaki język mówi się w Niemczech?)', options: ['Deutsch', 'Englisch', 'Polnisch', 'Französisch'], answer: 'Deutsch' },
+    { question: 'Welcher Sport ist in Deutschland beliebt?', questionPL: '(Jaki sport jest popularny w Niemczech?)', options: ['Fußball', 'Basketball', 'Tennis', 'Schwimmen'], answer: 'Fußball' },
+  ],
+  l1t3Bank: [
+    { question: 'Was ist typisches Essen in Deutschland?', questionPL: '(Co jest typowym jedzeniem w Niemczech?)', acceptableAnswers: ['Wurst und Brot', 'wurst und brot', 'Wurst', 'Brot'], fullAnswer: 'Typisches Essen in Deutschland ist Wurst und Brot.', hint: 'Wurst = kiełbasa, Brot = chleb' },
+    { question: 'Wie heißt die Hauptstadt von Deutschland?', questionPL: '(Jak nazywa się stolica Niemiec?)', acceptableAnswers: ['Berlin', 'berlin', 'Die Hauptstadt ist Berlin'], fullAnswer: 'Die Hauptstadt von Deutschland ist Berlin.' },
+    { question: 'Wie viele Menschen leben ungefähr in Deutschland?', questionPL: '(Ile ludzi mieszka mniej więcej w Niemczech?)', acceptableAnswers: ['84 Millionen', 'etwa 84 Millionen', '84'], fullAnswer: 'In Deutschland leben etwa 84 Millionen Menschen.' },
+  ],
+
+  // ── L2: Österreich ──
+  atText: 'Österreich liegt in Europa. Die Hauptstadt ist Wien.\nIn Österreich leben etwa 9 Millionen Menschen.\n\nDie Menschen sprechen Deutsch.\n\nÖsterreich ist ein schönes Land. Es gibt viele Berge, zum Beispiel die Alpen.\nDie Menschen arbeiten und lernen. In der Freizeit hören sie Musik oder machen Sport.\n\nTypisches Essen ist Wiener Schnitzel und Apfelstrudel.\nÖsterreich ist ein interessantes und schönes Land.',
+  l2t1Bank: [
+    { question: 'Na jakim kontynencie leży Austria?', options: ['In Europa', 'In Asien', 'In Afrika', 'In Australien'], answer: 'In Europa' },
+    { question: 'Jak nazywa się stolica Austrii?', options: ['Wien', 'Berlin', 'Bern', 'Zürich'], answer: 'Wien' },
+    { question: 'Jakim językiem mówią ludzie w Austrii?', options: ['Deutsch', 'Französisch', 'Italienisch', 'Englisch'], answer: 'Deutsch' },
+  ],
+  l2t2Bank: [
+    { question: 'Wie viele Menschen leben ungefähr in Österreich?', questionPL: '(Ile ludzi mieszka w Austrii?)', options: ['etwa 9 Millionen', 'etwa 84 Millionen', 'etwa 8 Millionen', 'etwa 38 Millionen'], answer: 'etwa 9 Millionen' },
+    { question: 'Welche Berge gibt es in Österreich?', questionPL: '(Jakie góry są w Austrii?)', options: ['die Alpen', 'die Karpaten', 'die Pyrenäen', 'der Himalaya'], answer: 'die Alpen' },
+    { question: 'Was ist typisches Essen aus Österreich?', questionPL: '(Co jest typowym jedzeniem z Austrii?)', options: ['Wiener Schnitzel und Apfelstrudel', 'Wurst und Brot', 'Schokolade und Käse', 'Pizza und Pasta'], answer: 'Wiener Schnitzel und Apfelstrudel' },
+  ],
+  l2t3Bank: [
+    { question: 'Wie heißt die Hauptstadt von Österreich?', acceptableAnswers: ['Wien', 'wien', 'Die Hauptstadt ist Wien'], fullAnswer: 'Die Hauptstadt von Österreich ist Wien.' },
+    { question: 'Was machen die Menschen in der Freizeit?', questionPL: '(Co ludzie robią w wolnym czasie?)', acceptableAnswers: ['Musik hören oder Sport machen', 'Musik hören', 'Sport machen', 'sie hören Musik'], fullAnswer: 'In der Freizeit hören sie Musik oder machen Sport.', hint: 'Freizeit = wolny czas, hören = słuchać, machen = robić' },
+    { question: 'Welche Berge gibt es in Österreich?', acceptableAnswers: ['die Alpen', 'Alpen'], fullAnswer: 'Es gibt viele Berge, zum Beispiel die Alpen.' },
+  ],
+
+  // ── L3: Die Schweiz ──
+  chText: 'Die Schweiz ist ein Land in Europa.\nSie hat etwa 8 Millionen Einwohner.\nDie Hauptstadt ist Bern.\n\nIn der Schweiz gibt es vier Landessprachen: Deutsch, Französisch, Italienisch und Rätoromanisch.\n\nDie Schweiz ist bekannt für die Berge. Die Alpen sind sehr hoch und schön.\nViele Menschen machen gern Ski oder wandern in den Bergen.\n\nDie Schweiz hat auch viele Seen, zum Beispiel den Genfersee und den Zürichsee.\n\nDie Städte Zürich, Genf und Basel sind groß und modern.\n\nDie Schweiz ist berühmt für Schokolade, Käse und Uhren.\n\nDas Land ist neutral und hat keine Armee für Kriege.',
+  l3t1Bank: [
+    { question: 'Jaka jest stolica Szwajcarii?', options: ['Bern', 'Zürich', 'Genf', 'Basel'], answer: 'Bern' },
+    { question: 'Ile mieszkańców ma Szwajcaria?', options: ['etwa 8 Millionen', 'etwa 84 Millionen', 'etwa 9 Millionen', 'etwa 38 Millionen'], answer: 'etwa 8 Millionen' },
+    { question: 'Z czego słynie Szwajcaria?', options: ['Schokolade, Käse und Uhren', 'Wurst und Brot', 'Fußball und Musik', 'Wiener Schnitzel'], answer: 'Schokolade, Käse und Uhren' },
+  ],
+  l3t2Bank: [
+    { question: 'Welche vier Landessprachen gibt es in der Schweiz?', questionPL: '(Jakie cztery języki urzędowe są w Szwajcarii?)', options: ['Deutsch, Französisch, Italienisch und Rätoromanisch', 'Deutsch, Englisch, Französisch und Spanisch', 'Deutsch, Polnisch, Italienisch und Französisch', 'Englisch, Französisch, Spanisch und Italienisch'], answer: 'Deutsch, Französisch, Italienisch und Rätoromanisch' },
+    { question: 'Für welche Berge ist die Schweiz bekannt?', questionPL: '(Z jakich gór znana jest Szwajcaria?)', options: ['die Alpen', 'die Karpaten', 'die Pyrenäen', 'die Anden'], answer: 'die Alpen' },
+    { question: 'Welche Seen gibt es in der Schweiz?', questionPL: '(Jakie jeziora są w Szwajcarii?)', options: ['den Genfersee und den Zürichsee', 'den Bodensee', 'die Ostsee', 'den Balaton'], answer: 'den Genfersee und den Zürichsee' },
+    { question: 'Was machen viele Menschen gern in den Bergen?', questionPL: '(Co ludzie lubią robić w górach?)', options: ['Ski machen oder wandern', 'Fußball spielen', 'schwimmen', 'Musik hören'], answer: 'Ski machen oder wandern' },
+  ],
+  l3t3Bank: [
+    { question: 'Welche vier Landessprachen gibt es in der Schweiz?', acceptableAnswers: ['Deutsch, Französisch, Italienisch und Rätoromanisch', 'Deutsch Französisch Italienisch Rätoromanisch'], fullAnswer: 'In der Schweiz gibt es vier Landessprachen: Deutsch, Französisch, Italienisch und Rätoromanisch.', hint: 'Cztery języki: Deutsch, Französisch, Italienisch und Rätoromanisch' },
+    { question: 'Wofür ist die Schweiz besonders berühmt?', questionPL: '(Z czego Szwajcaria jest szczególnie znana?)', acceptableAnswers: ['Schokolade, Käse und Uhren', 'Schokolade Käse Uhren', 'Schokolade'], fullAnswer: 'Die Schweiz ist berühmt für Schokolade, Käse und Uhren.', hint: 'Schokolade = czekolada, Käse = ser, Uhren = zegarki' },
+    { question: 'Was ist die Hauptstadt der Schweiz?', acceptableAnswers: ['Bern', 'bern', 'Die Hauptstadt ist Bern'], fullAnswer: 'Die Hauptstadt der Schweiz ist Bern.' },
+    { question: 'Welche großen Städte hat die Schweiz?', questionPL: '(Jakie duże miasta ma Szwajcaria?)', acceptableAnswers: ['Zürich, Genf und Basel', 'Zürich Genf Basel'], fullAnswer: 'Die Städte Zürich, Genf und Basel sind groß und modern.' },
+  ],
+
+  // ── L4: Porównanie krajów (boss-level) ──
+  l4Bank: [
+    { question: 'Welches Land hat die meisten Einwohner?', questionPL: '(Który kraj ma najwięcej mieszkańców?)', options: ['Deutschland (84 Mio.)', 'Österreich (9 Mio.)', 'Die Schweiz (8 Mio.)'], answer: 'Deutschland (84 Mio.)' },
+    { question: 'In welchem Land spricht man vier Sprachen?', questionPL: '(W jakim kraju mówi się czterema językami?)', options: ['In der Schweiz', 'In Deutschland', 'In Österreich'], answer: 'In der Schweiz' },
+    { question: 'Welches Land ist berühmt für Schokolade und Uhren?', questionPL: '(Który kraj słynie z czekolady i zegarków?)', options: ['Die Schweiz', 'Deutschland', 'Österreich'], answer: 'Die Schweiz' },
+    { question: 'Wo isst man Wiener Schnitzel und Apfelstrudel?', questionPL: '(Gdzie je się Wiener Schnitzel i Apfelstrudel?)', options: ['In Österreich', 'In Deutschland', 'In der Schweiz'], answer: 'In Österreich' },
+    { question: 'Welche Berge gibt es in Österreich UND in der Schweiz?', questionPL: '(Jakie góry są i w Austrii i w Szwajcarii?)', options: ['die Alpen', 'die Karpaten', 'die Pyrenäen'], answer: 'die Alpen' },
+    { question: 'Welche Farben hat die deutsche Flagge?', questionPL: '(Jakie kolory ma niemiecka flaga?)', options: ['Schwarz, rot und goldig', 'Weiß und rot', 'Rot und weiß'], answer: 'Schwarz, rot und goldig' },
+  ],
+
+  // ── Generator methods returning question objects ──
+  // Returns { text, type, options, answer, hint, readingText, ... }
+
+  ueberMichEasy() {
+    const q = this._pick(this.u1t1Bank, 'u1t1');
+    return {
+      text: `Uzupełnij zdanie:\n\n${q.template}`,
+      type: 'german-choice',
+      options: q.options,
+      answer: q.answer,
+      hint: q.hint,
+      cssClass: 'word-problem',
+    };
+  },
+
+  ueberMichMedium() {
+    const q = this._pick(this.u1t2Bank, 'u1t2');
+    return {
+      text: `Jak powiedzieć to po niemiecku?\n\n"${q.polish}"`,
+      type: 'german-choice',
+      options: q.options,
+      answer: q.options.indexOf(q.answer) >= 0 ? q.answer : q.answer,
+      cssClass: 'word-problem',
+    };
+  },
+
+  ueberMichHard() {
+    const q = this._pick(this.u1t3Bank, 'u1t3');
+    return {
+      text: `Ułóż zdanie z podanych słów:`,
+      type: 'german-scramble',
+      words: [...q.words].sort(() => Math.random() - 0.5),
+      answer: q.answer,
+      hint: q.hint,
+      cssClass: 'word-problem',
+    };
+  },
+
+  vokabelnEasy() {
+    const q = this._pick(this.u2t1Bank, 'u2t1');
+    return {
+      text: `Przetłumacz na niemiecki:\n\n"${q.polish}"`,
+      type: 'german-choice',
+      options: q.options,
+      answer: q.answer,
+      cssClass: 'word-problem',
+    };
+  },
+
+  vokabelnMedium() {
+    const q = this._pick(this.u2t2Bank, 'u2t2');
+    return {
+      text: `Przetłumacz na polski:\n\n"${q.german}"`,
+      type: 'german-choice',
+      options: q.options,
+      answer: q.answer,
+      cssClass: 'word-problem',
+    };
+  },
+
+  vokabelnHard() {
+    const q = this._pick(this.u2t3Bank, 'u2t3');
+    return {
+      text: `Wpisz po niemiecku:\n\n"${q.polish}"`,
+      type: 'german-input',
+      acceptableAnswers: [q.answer, q.answer.toLowerCase()],
+      answer: q.answer,
+      hint: q.hint,
+      cssClass: 'word-problem',
+    };
+  },
+
+  _leseEasy(bank, key) {
+    const q = this._pick(bank, key);
+    return {
+      text: q.question,
+      type: 'german-choice',
+      options: q.options,
+      answer: q.answer,
+      cssClass: 'word-problem',
+    };
+  },
+
+  _leseMedium(bank, key, readingText) {
+    const q = this._pick(bank, key);
+    return {
+      text: q.question + (q.questionPL ? '\n' + q.questionPL : ''),
+      type: 'german-choice',
+      options: q.options,
+      answer: q.answer,
+      readingText,
+      cssClass: 'word-problem',
+    };
+  },
+
+  _leseHard(bank, key, readingText) {
+    const q = this._pick(bank, key);
+    return {
+      text: q.question + (q.questionPL ? '\n' + q.questionPL : ''),
+      type: 'german-input',
+      acceptableAnswers: q.acceptableAnswers,
+      answer: q.acceptableAnswers[0],
+      fullAnswer: q.fullAnswer,
+      hint: q.hint,
+      readingText,
+      cssClass: 'word-problem',
+    };
+  },
+
+  deutschlandEasy() { return this._leseEasy(this.l1t1Bank, 'l1t1'); },
+  deutschlandMedium() { return this._leseMedium(this.l1t2Bank, 'l1t2', this.deText); },
+  deutschlandHard() { return this._leseHard(this.l1t3Bank, 'l1t3', this.deText); },
+
+  oesterreichEasy() { return this._leseEasy(this.l2t1Bank, 'l2t1'); },
+  oesterreichMedium() { return this._leseMedium(this.l2t2Bank, 'l2t2', this.atText); },
+  oesterreichHard() { return this._leseHard(this.l2t3Bank, 'l2t3', this.atText); },
+
+  schweizEasy() { return this._leseEasy(this.l3t1Bank, 'l3t1'); },
+  schweizMedium() { return this._leseMedium(this.l3t2Bank, 'l3t2', this.chText); },
+  schweizHard() { return this._leseHard(this.l3t3Bank, 'l3t3', this.chText); },
+
+  vergleichHard() {
+    const q = this._pick(this.l4Bank, 'l4');
+    return {
+      text: q.question + (q.questionPL ? '\n' + q.questionPL : ''),
+      type: 'german-choice',
+      options: q.options,
+      answer: q.answer,
+      cssClass: 'word-problem',
+    };
+  },
+};
+
 // ─── DUNGEON MAP (branching paths) ───
 const DungeonMap = {
   canvas: null,
