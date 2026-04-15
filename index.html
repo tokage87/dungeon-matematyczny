@@ -1134,6 +1134,60 @@ body {
   animation: levelPulse 0.5s ease-in-out infinite alternate;
 }
 
+/* ─── BOSS DEFEATED OVERLAY ─── */
+#boss-defeated-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 260;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  animation: fadeIn 0.5s;
+}
+
+#boss-defeated-overlay h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(18px, 3vw, 28px);
+  color: #f0d060;
+  text-shadow: 0 0 30px #f0d06088;
+  margin-bottom: 10px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+#boss-defeated-overlay .boss-defeated-sub {
+  font-size: 16px;
+  color: #88ff88;
+  margin-bottom: 8px;
+}
+
+#boss-defeated-overlay .boss-defeated-time {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #aaaacc;
+  margin-bottom: 24px;
+}
+
+.boss-next-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  padding: 16px 40px;
+  background: linear-gradient(180deg, #4a3080 0%, #2a1860 100%);
+  color: #f0d060;
+  border: 2px solid #f0d060;
+  cursor: pointer;
+  transition: all 0.2s;
+  animation: levelPulse 1s ease-in-out infinite alternate;
+}
+
+.boss-next-btn:hover {
+  background: linear-gradient(180deg, #6a40a0 0%, #4a2880 100%);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #f0d06044;
+}
+
 @keyframes levelPulse {
   from { transform: scale(1); }
   to { transform: scale(1.15); }
@@ -2486,6 +2540,15 @@ body {
   <div style="color:#88ff88; margin-bottom:8px;">Wszystkie ataki +1 DMG!</div>
   <div style="color:#ff8888; margin-bottom:16px;">❤️ Pełne zdrowie!</div>
   <div style="color:#a0a0c0; font-size:12px;">Kliknij aby kontynuować.</div>
+</div>
+
+<!-- BOSS DEFEATED OVERLAY -->
+<div id="boss-defeated-overlay">
+  <div style="font-size:64px; margin-bottom:16px;">💀✨</div>
+  <h2 id="boss-defeated-title">BOSS POKONANY!</h2>
+  <div class="boss-defeated-sub" id="boss-defeated-sub"></div>
+  <div class="boss-defeated-time" id="boss-defeated-time"></div>
+  <button class="boss-next-btn" id="boss-next-btn" onclick="Game.advanceFloor()">NASTĘPNE PIĘTRO →</button>
 </div>
 
 <!-- VICTORY SCREEN -->
@@ -4056,6 +4119,17 @@ const DungeonMap = {
     for (let c = 0; c < columns.length - 1; c++) {
       const cur = columns[c];
       const nxt = columns[c + 1];
+      const isBossNext = c === columns.length - 2;
+
+      // Boss column: ALL rooms in previous column must connect to boss
+      if (isBossNext) {
+        for (const cRoom of cur) {
+          if (!cRoom.connections.includes(nxt[0].id)) {
+            cRoom.connections.push(nxt[0].id);
+          }
+        }
+        continue;
+      }
 
       // First: guarantee every next-col room has at least 1 incoming
       for (const nRoom of nxt) {
@@ -5875,15 +5949,31 @@ const Battle = {
       Achievements.checkBossDefeated(Game.currentFloor, bossTime);
       Audio_.bossDefeat();
       spawnConfetti();
+
+      // Show boss-defeated overlay with button
+      const floorNames = { 1: 'Krypta Obliczeniowa', 2: 'Jaskinia Ułamków', 3: 'Wieża Bossa' };
+      document.getElementById('boss-defeated-title').textContent =
+        Game.currentFloor < 3 ? 'BOSS POKONANY!' : 'DUNGEON UKOŃCZONY!';
+      document.getElementById('boss-defeated-sub').textContent =
+        `Piętro ${Game.currentFloor}: ${floorNames[Game.currentFloor]} — ukończone!`;
+      document.getElementById('boss-defeated-time').textContent =
+        bossTime ? `⏱️ Czas: ${Game.formatTime(bossTime)}` : '';
+
+      const btn = document.getElementById('boss-next-btn');
       if (Game.currentFloor < 3) {
-        setTimeout(() => {
-          Game.currentFloor++;
-          Game.showFloorIntro();
-        }, 2000);
+        btn.textContent = 'NASTĘPNE PIĘTRO →';
+        btn.onclick = () => Game.advanceFloor();
       } else {
-        Game.stopTimer();
-        setTimeout(() => Game.victory(), 2000);
+        btn.textContent = 'ZOBACZ WYNIKI 🏆';
+        btn.onclick = () => {
+          document.getElementById('boss-defeated-overlay').style.display = 'none';
+          Game.stopTimer();
+          Game.victory();
+        };
       }
+      setTimeout(() => {
+        document.getElementById('boss-defeated-overlay').style.display = 'flex';
+      }, 800);
     } else {
       Game.state = 'map';
       DungeonMap.render();
@@ -6135,6 +6225,12 @@ const Game = {
 
   closeLevelUp() {
     document.getElementById('levelup-overlay').style.display = 'none';
+  },
+
+  advanceFloor() {
+    document.getElementById('boss-defeated-overlay').style.display = 'none';
+    this.currentFloor++;
+    this.showFloorIntro();
   },
 
   backToTitle() {
