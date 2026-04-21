@@ -5712,6 +5712,16 @@ const Battle = {
       { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
       { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
       { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
+      // Niemiecki — Über mich T1
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichEasy() },
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichEasy() },
+      // Niemiecki — Słownictwo T1
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnEasy() },
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnEasy() },
+      // Niemiecki — Leseverstehen T1
+      { id: 'deDeutschland', gen: () => GermanGen.deutschlandEasy() },
+      { id: 'deOesterreich', gen: () => GermanGen.oesterreichEasy() },
+      { id: 'deSchweiz', gen: () => GermanGen.schweizEasy() },
     ], floor);
   },
 
@@ -5743,6 +5753,16 @@ const Battle = {
       // Ułamki — skracanie 10%
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
+      // Niemiecki — Über mich T2
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichMedium() },
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichMedium() },
+      // Niemiecki — Słownictwo T2
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnMedium() },
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnMedium() },
+      // Niemiecki — Leseverstehen T2
+      { id: 'deDeutschland', gen: () => GermanGen.deutschlandMedium() },
+      { id: 'deOesterreich', gen: () => GermanGen.oesterreichMedium() },
+      { id: 'deSchweiz', gen: () => GermanGen.schweizMedium() },
     ], floor);
   },
 
@@ -5773,6 +5793,19 @@ const Battle = {
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
+      // Niemiecki — Über mich T3 (rozsypanka)
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichHard() },
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichHard() },
+      // Niemiecki — Słownictwo T3 (wpisz)
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnHard() },
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnHard() },
+      // Niemiecki — Leseverstehen T3
+      { id: 'deDeutschland', gen: () => GermanGen.deutschlandHard() },
+      { id: 'deOesterreich', gen: () => GermanGen.oesterreichHard() },
+      { id: 'deSchweiz', gen: () => GermanGen.schweizHard() },
+      // Niemiecki — Porównanie krajów (boss-level)
+      { id: 'deVergleich', gen: () => GermanGen.vergleichHard() },
+      { id: 'deVergleich', gen: () => GermanGen.vergleichHard() },
     ], floor);
   },
 
@@ -6927,6 +6960,12 @@ const CatSelect = {
     { id: 'fractionFigure', icon: '🟦', name: 'Ułamki z figury' },
     { id: 'orderOfOps', icon: '🔢', name: 'Kolejność działań' },
     { id: 'roblox', icon: '💻', name: 'Quiz Roblox Studio' },
+    { id: 'deUeberMich', icon: '🇩🇪', name: 'Über mich — zdania' },
+    { id: 'deVokabeln', icon: '🔠', name: 'Słownictwo DE' },
+    { id: 'deDeutschland', icon: '🏛️', name: 'Text: Deutschland' },
+    { id: 'deOesterreich', icon: '⛰️', name: 'Text: Österreich' },
+    { id: 'deSchweiz', icon: '🏔️', name: 'Text: Die Schweiz' },
+    { id: 'deVergleich', icon: '🌍', name: 'Porównanie krajów DE' },
   ],
 
   selected: new Set(),
