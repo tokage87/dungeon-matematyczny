@@ -2350,8 +2350,11 @@ body {
   <div class="torch-left">🔥</div>
   <div class="torch-right">🔥</div>
   <h1>DUNGEON<br>MATEMATYCZNY</h1>
-  <div class="subtitle">Pokonaj potwory siłą matematyki!</div>
-  <button class="menu-btn" onclick="Game.newGame()">NOWA GRA</button>
+  <div class="subtitle">Pokonaj potwory siłą wiedzy!</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+    <button class="menu-btn" onclick="Game.newGame('math')">🧮 MATEMATYKA</button>
+    <button class="menu-btn" onclick="Game.newGame('german')">🇩🇪 NIEMIECKI</button>
+  </div>
   <button class="menu-btn" id="continue-btn" onclick="Game.continueGame()" disabled>KONTYNUUJ</button>
   <button class="menu-btn" onclick="Practice.showCategories()" style="margin-top:10px;">📝 PYTANIA</button>
   <div style="display:flex;gap:10px;margin-top:8px;">
@@ -5610,11 +5613,11 @@ const Battle = {
       this.currentQuestion = this._previewedQuestions[diffIdx];
       this._previewedQuestions = null;
     } else if (difficulty === 'easy') {
-      this.currentQuestion = this.genEasy(floor);
+      this.currentQuestion = Game.subject === 'german' ? this.genGermanEasy() : this.genEasy(floor);
     } else if (difficulty === 'medium') {
-      this.currentQuestion = this.genMedium(floor);
+      this.currentQuestion = Game.subject === 'german' ? this.genGermanMedium() : this.genMedium(floor);
     } else {
-      this.currentQuestion = this.genHard(floor);
+      this.currentQuestion = Game.subject === 'german' ? this.genGermanHard() : this.genHard(floor);
     }
 
     // Show question, hide attack choice
@@ -5712,16 +5715,6 @@ const Battle = {
       { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
       { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
       { id: 'numberWords', gen: (f) => MathGen.numberWords(f) },
-      // Niemiecki — Über mich T1
-      { id: 'deUeberMich', gen: () => GermanGen.ueberMichEasy() },
-      { id: 'deUeberMich', gen: () => GermanGen.ueberMichEasy() },
-      // Niemiecki — Słownictwo T1
-      { id: 'deVokabeln', gen: () => GermanGen.vokabelnEasy() },
-      { id: 'deVokabeln', gen: () => GermanGen.vokabelnEasy() },
-      // Niemiecki — Leseverstehen T1
-      { id: 'deDeutschland', gen: () => GermanGen.deutschlandEasy() },
-      { id: 'deOesterreich', gen: () => GermanGen.oesterreichEasy() },
-      { id: 'deSchweiz', gen: () => GermanGen.schweizEasy() },
     ], floor);
   },
 
@@ -5753,16 +5746,6 @@ const Battle = {
       // Ułamki — skracanie 10%
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
-      // Niemiecki — Über mich T2
-      { id: 'deUeberMich', gen: () => GermanGen.ueberMichMedium() },
-      { id: 'deUeberMich', gen: () => GermanGen.ueberMichMedium() },
-      // Niemiecki — Słownictwo T2
-      { id: 'deVokabeln', gen: () => GermanGen.vokabelnMedium() },
-      { id: 'deVokabeln', gen: () => GermanGen.vokabelnMedium() },
-      // Niemiecki — Leseverstehen T2
-      { id: 'deDeutschland', gen: () => GermanGen.deutschlandMedium() },
-      { id: 'deOesterreich', gen: () => GermanGen.oesterreichMedium() },
-      { id: 'deSchweiz', gen: () => GermanGen.schweizMedium() },
     ], floor);
   },
 
@@ -5793,20 +5776,48 @@ const Battle = {
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
       { id: 'fractions', gen: () => MathGen.fractionReduce() },
-      // Niemiecki — Über mich T3 (rozsypanka)
+    ], floor);
+  },
+
+  // ── German-only pools ──
+  genGermanEasy() {
+    return this._pick([
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichEasy() },
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichEasy() },
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichEasy() },
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnEasy() },
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnEasy() },
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnEasy() },
+      { id: 'deDeutschland', gen: () => GermanGen.deutschlandEasy() },
+      { id: 'deOesterreich', gen: () => GermanGen.oesterreichEasy() },
+      { id: 'deSchweiz', gen: () => GermanGen.schweizEasy() },
+    ], 1);
+  },
+
+  genGermanMedium() {
+    return this._pick([
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichMedium() },
+      { id: 'deUeberMich', gen: () => GermanGen.ueberMichMedium() },
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnMedium() },
+      { id: 'deVokabeln', gen: () => GermanGen.vokabelnMedium() },
+      { id: 'deDeutschland', gen: () => GermanGen.deutschlandMedium() },
+      { id: 'deOesterreich', gen: () => GermanGen.oesterreichMedium() },
+      { id: 'deSchweiz', gen: () => GermanGen.schweizMedium() },
+    ], 1);
+  },
+
+  genGermanHard() {
+    return this._pick([
       { id: 'deUeberMich', gen: () => GermanGen.ueberMichHard() },
       { id: 'deUeberMich', gen: () => GermanGen.ueberMichHard() },
-      // Niemiecki — Słownictwo T3 (wpisz)
       { id: 'deVokabeln', gen: () => GermanGen.vokabelnHard() },
       { id: 'deVokabeln', gen: () => GermanGen.vokabelnHard() },
-      // Niemiecki — Leseverstehen T3
       { id: 'deDeutschland', gen: () => GermanGen.deutschlandHard() },
       { id: 'deOesterreich', gen: () => GermanGen.oesterreichHard() },
       { id: 'deSchweiz', gen: () => GermanGen.schweizHard() },
-      // Niemiecki — Porównanie krajów (boss-level)
       { id: 'deVergleich', gen: () => GermanGen.vergleichHard() },
       { id: 'deVergleich', gen: () => GermanGen.vergleichHard() },
-    ], floor);
+    ], 1);
   },
 
   renderQuestion() {
@@ -6538,7 +6549,10 @@ const Game = {
     appearance: { name: 'Bohater', gender: 'm', skin: 0, hat: 0, tunic: 2, boots: 0 }
   },
 
-  newGame() {
+  subject: 'math',
+
+  newGame(subject) {
+    this.subject = subject || 'math';
     CharCreate.show();
   },
 
@@ -6598,6 +6612,7 @@ const Game = {
     this.player = save.player;
     this._savedRooms = save.rooms || null;
     this.enabledCategories = save.enabledCategories || null;
+    this.subject = save.subject || 'math';
     this.gameStartTime = save.gameStartTime || Date.now();
     this.bossTimes = save.bossTimes || {};
     DungeonMap.init();
@@ -6773,6 +6788,7 @@ const Game = {
       player: this.player,
       rooms: roomStates,
       enabledCategories: this.enabledCategories,
+      subject: this.subject,
       gameStartTime: this.gameStartTime,
       bossTimes: this.bossTimes
     }));
@@ -6946,33 +6962,37 @@ const CharCreate = {
 const CatSelect = {
   // All game categories with their IDs matching what genEasy/genMedium/genHard use
   allCategories: [
-    { id: 'numberLine', icon: '📏', name: 'Oś liczbowa' },
-    { id: 'numberWords', icon: '🔤', name: 'Zapis słowny' },
-    { id: 'calculation', icon: '🧮', name: 'Obliczenia (+−·:)' },
-    { id: 'missingNumber', icon: '❓', name: 'Brakująca liczba' },
-    { id: 'writtenCalc', icon: '📝', name: 'Działania pisemne +/−' },
-    { id: 'writtenMultiply', icon: '✖️', name: 'Mnożenie pisemne' },
-    { id: 'writtenDivide', icon: '➗', name: 'Dzielenie pisemne' },
-    { id: 'fractions', icon: '½', name: 'Ułamki — skracanie' },
-    { id: 'geometryBasic', icon: '📐', name: 'Prosta, półprosta, odcinek' },
-    { id: 'geometryLines', icon: '📏', name: 'Równoległe i prostopadłe' },
-    { id: 'wordProblem', icon: '📖', name: 'Zadania z treścią' },
-    { id: 'fractionFigure', icon: '🟦', name: 'Ułamki z figury' },
-    { id: 'orderOfOps', icon: '🔢', name: 'Kolejność działań' },
-    { id: 'roblox', icon: '💻', name: 'Quiz Roblox Studio' },
-    { id: 'deUeberMich', icon: '🇩🇪', name: 'Über mich — zdania' },
-    { id: 'deVokabeln', icon: '🔠', name: 'Słownictwo DE' },
-    { id: 'deDeutschland', icon: '🏛️', name: 'Text: Deutschland' },
-    { id: 'deOesterreich', icon: '⛰️', name: 'Text: Österreich' },
-    { id: 'deSchweiz', icon: '🏔️', name: 'Text: Die Schweiz' },
-    { id: 'deVergleich', icon: '🌍', name: 'Porównanie krajów DE' },
+    { id: 'numberLine', icon: '📏', name: 'Oś liczbowa', subject: 'math' },
+    { id: 'numberWords', icon: '🔤', name: 'Zapis słowny', subject: 'math' },
+    { id: 'calculation', icon: '🧮', name: 'Obliczenia (+−·:)', subject: 'math' },
+    { id: 'missingNumber', icon: '❓', name: 'Brakująca liczba', subject: 'math' },
+    { id: 'writtenCalc', icon: '📝', name: 'Działania pisemne +/−', subject: 'math' },
+    { id: 'writtenMultiply', icon: '✖️', name: 'Mnożenie pisemne', subject: 'math' },
+    { id: 'writtenDivide', icon: '➗', name: 'Dzielenie pisemne', subject: 'math' },
+    { id: 'fractions', icon: '½', name: 'Ułamki — skracanie', subject: 'math' },
+    { id: 'geometryBasic', icon: '📐', name: 'Prosta, półprosta, odcinek', subject: 'math' },
+    { id: 'geometryLines', icon: '📏', name: 'Równoległe i prostopadłe', subject: 'math' },
+    { id: 'wordProblem', icon: '📖', name: 'Zadania z treścią', subject: 'math' },
+    { id: 'fractionFigure', icon: '🟦', name: 'Ułamki z figury', subject: 'math' },
+    { id: 'orderOfOps', icon: '🔢', name: 'Kolejność działań', subject: 'math' },
+    { id: 'roblox', icon: '💻', name: 'Quiz Roblox Studio', subject: 'math' },
+    { id: 'deUeberMich', icon: '🇩🇪', name: 'Über mich — zdania', subject: 'german' },
+    { id: 'deVokabeln', icon: '🔠', name: 'Słownictwo DE', subject: 'german' },
+    { id: 'deDeutschland', icon: '🏛️', name: 'Text: Deutschland', subject: 'german' },
+    { id: 'deOesterreich', icon: '⛰️', name: 'Text: Österreich', subject: 'german' },
+    { id: 'deSchweiz', icon: '🏔️', name: 'Text: Die Schweiz', subject: 'german' },
+    { id: 'deVergleich', icon: '🌍', name: 'Porównanie krajów DE', subject: 'german' },
   ],
 
   selected: new Set(),
 
+  getVisibleCategories() {
+    return this.allCategories.filter(c => c.subject === Game.subject);
+  },
+
   show() {
-    // Default: all checked
-    this.selected = new Set(this.allCategories.map(c => c.id));
+    const visible = this.getVisibleCategories();
+    this.selected = new Set(visible.map(c => c.id));
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('category-select-screen').style.display = 'flex';
     this.render();
@@ -6981,7 +7001,7 @@ const CatSelect = {
   render() {
     const list = document.getElementById('catsel-list');
     let html = '';
-    for (const cat of this.allCategories) {
+    for (const cat of this.getVisibleCategories()) {
       const checked = this.selected.has(cat.id);
       html += `
         <div class="catsel-item ${checked ? 'checked' : ''}" onclick="CatSelect.toggle('${cat.id}')">
