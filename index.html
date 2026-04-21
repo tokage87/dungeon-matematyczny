@@ -944,6 +944,90 @@ body {
   font-style: italic;
 }
 
+/* ─── GERMAN READING TEXT ─── */
+.reading-text-box {
+  background: #0a0a1a;
+  border: 2px solid #444466;
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.reading-text-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #6688aa;
+  margin-bottom: 6px;
+}
+
+.reading-text-content {
+  font-size: 14px;
+  color: #ccccee;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+/* ─── GERMAN SCRAMBLE WORDS ─── */
+.scramble-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.scramble-word {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  padding: 10px 14px;
+  background: #1a1040;
+  color: #f0d060;
+  border: 2px solid #4a3080;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.scramble-word:hover {
+  background: #2a1860;
+  border-color: #f0d060;
+  transform: translateY(-2px);
+}
+
+.scramble-word.used {
+  opacity: 0.3;
+  cursor: default;
+  transform: none;
+}
+
+.scramble-result {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: #ffffff;
+  min-height: 40px;
+  padding: 10px 14px;
+  background: #0a0a20;
+  border: 2px solid #333355;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.scramble-undo-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 6px 12px;
+  background: #1a0a0a;
+  color: #ff8888;
+  border: 2px solid #6a2a2a;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
 /* ─── ATTACK CHOICE ─── */
 #attack-choice {
   display: grid;
@@ -5697,6 +5781,70 @@ const Battle = {
     const qText = document.getElementById('question-text');
     const answerArea = document.getElementById('answer-area');
 
+    // ── German: choice (4 buttons) ──
+    if (q.type === 'german-choice') {
+      let html = '';
+      if (q.readingText) {
+        html += `<div class="reading-text-box"><div class="reading-text-label">📖 TEKST:</div><div class="reading-text-content">${q.readingText}</div></div>`;
+      }
+      html += `<div style="white-space:pre-line;">${q.text}</div>`;
+      qText.innerHTML = html;
+      qText.className = 'question-text word-problem';
+      let btns = '<div class="quiz-answers">';
+      q.options.forEach((opt, i) => {
+        const safeOpt = opt.replace(/'/g, "\\'");
+        btns += `<button class="quiz-answer-btn" onclick="Battle.submitGermanChoice('${safeOpt}')">${opt}</button>`;
+      });
+      btns += '</div>';
+      if (q.hint) btns += `<div class="quiz-hint">💡 ${q.hint}</div>`;
+      answerArea.innerHTML = btns;
+      return;
+    }
+
+    // ── German: text input (multi-answer) ──
+    if (q.type === 'german-input') {
+      let html = '';
+      if (q.readingText) {
+        html += `<div class="reading-text-box"><div class="reading-text-label">📖 TEKST:</div><div class="reading-text-content">${q.readingText}</div></div>`;
+      }
+      html += `<div style="white-space:pre-line;">${q.text}</div>`;
+      qText.innerHTML = html;
+      qText.className = 'question-text word-problem';
+      answerArea.innerHTML = `
+        <input type="text" class="answer-input text-input" id="answer-input" autocomplete="off" inputmode="text" placeholder="Wpisz po niemiecku...">
+        <button class="attack-btn" onclick="Battle.submitAnswer()">ATAKUJ! ⚔️</button>
+      `;
+      if (q.hint) answerArea.innerHTML += `<div class="quiz-hint">💡 ${q.hint}</div>`;
+      setTimeout(() => {
+        const inp = document.getElementById('answer-input');
+        inp.focus();
+        inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') Battle.submitAnswer(); });
+      }, 100);
+      return;
+    }
+
+    // ── German: word scramble ──
+    if (q.type === 'german-scramble') {
+      let html = '';
+      html += `<div style="white-space:pre-line;margin-bottom:10px;">${q.text}</div>`;
+      html += `<div class="scramble-result" id="scramble-result"></div>`;
+      html += '<div class="scramble-words" id="scramble-words">';
+      q.words.forEach((w, i) => {
+        html += `<span class="scramble-word" data-idx="${i}" onclick="Battle._scrambleClick(this)">${w}</span>`;
+      });
+      html += '</div>';
+      qText.innerHTML = html;
+      qText.className = 'question-text word-problem';
+      this._scrambleOrder = [];
+      this._scrambleWords = q.words;
+      answerArea.innerHTML = `
+        <button class="scramble-undo-btn" onclick="Battle._scrambleUndo()">↩ COFNIJ</button>
+        <button class="attack-btn" onclick="Battle.submitAnswer()">ATAKUJ! ⚔️</button>
+      `;
+      if (q.hint) answerArea.innerHTML += `<div class="quiz-hint">💡 ${q.hint}</div>`;
+      return;
+    }
+
     // ── Fraction figure: canvas ──
     if (q.type === 'fractionFigure') {
       qText.className = 'question-text';
@@ -6044,11 +6192,59 @@ const Battle = {
     }, 800);
   },
 
+  submitGermanChoice(chosen) {
+    const q = this.currentQuestion;
+    const correct = chosen === q.answer;
+    document.querySelectorAll('.quiz-answer-btn').forEach(btn => {
+      btn.disabled = true;
+      if (btn.textContent === q.answer) {
+        btn.style.borderColor = '#44ff44';
+        btn.style.background = '#0a2a0a';
+      } else if (btn.textContent === chosen && !correct) {
+        btn.style.borderColor = '#ff4444';
+        btn.style.background = '#2a0a0a';
+      }
+    });
+    setTimeout(() => {
+      if (correct) this._handleCorrectAnswer();
+      else this._handleWrongAnswer();
+    }, 800);
+  },
+
+  _scrambleOrder: [],
+  _scrambleWords: [],
+
+  _scrambleClick(el) {
+    if (el.classList.contains('used')) return;
+    el.classList.add('used');
+    const idx = parseInt(el.dataset.idx);
+    this._scrambleOrder.push(idx);
+    const result = this._scrambleOrder.map(i => this._scrambleWords[i]).join(' ');
+    document.getElementById('scramble-result').textContent = result;
+  },
+
+  _scrambleUndo() {
+    if (this._scrambleOrder.length === 0) return;
+    const last = this._scrambleOrder.pop();
+    document.querySelectorAll('.scramble-word').forEach(el => {
+      if (parseInt(el.dataset.idx) === last) el.classList.remove('used');
+    });
+    const result = this._scrambleOrder.map(i => this._scrambleWords[i]).join(' ');
+    document.getElementById('scramble-result').textContent = result;
+  },
+
   submitAnswer() {
     const q = this.currentQuestion;
     let playerAnswer;
 
-    if (q.type === 'fraction' || q.type === 'fractionFigure') {
+    if (q.type === 'german-scramble') {
+      playerAnswer = this._scrambleOrder.map(i => this._scrambleWords[i]).join(' ');
+      if (!playerAnswer) return;
+    } else if (q.type === 'german-input') {
+      const input = document.getElementById('answer-input');
+      playerAnswer = input.value.trim();
+      if (!playerAnswer) return;
+    } else if (q.type === 'fraction' || q.type === 'fractionFigure') {
       const num = document.getElementById('frac-num').value.trim();
       const den = document.getElementById('frac-den').value.trim();
       if (!num || !den) return;
@@ -6131,7 +6327,17 @@ const Battle = {
   },
 
   checkAnswer(playerAnswer, q) {
-    if (q.type === 'fraction' || q.type === 'fractionFigure') {
+    if (q.type === 'german-scramble') {
+      const norm = s => s.toLowerCase().trim().replace(/[.!?,]/g, '').replace(/\s+/g, ' ');
+      return norm(playerAnswer) === norm(q.answer);
+    } else if (q.type === 'german-input') {
+      const norm = s => s.toLowerCase().trim().replace(/[.!?,]/g, '').replace(/\s+/g, ' ');
+      const pa = norm(playerAnswer);
+      if (q.acceptableAnswers) {
+        return q.acceptableAnswers.some(a => norm(a) === pa);
+      }
+      return pa === norm(q.answer);
+    } else if (q.type === 'fraction' || q.type === 'fractionFigure') {
       const parts = playerAnswer.split('/');
       if (parts.length !== 2) return false;
       const pNum = parseInt(parts[0]);
