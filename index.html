@@ -6387,11 +6387,13 @@ const Battle = {
       return norm(playerAnswer) === norm(q.answer);
     } else if (q.type === 'german-input') {
       const norm = s => s.toLowerCase().trim().replace(/[.!?,]/g, '').replace(/\s+/g, ' ');
+      const nospace = s => norm(s).replace(/\s/g, '');
       const pa = norm(playerAnswer);
+      const paNoSpace = nospace(playerAnswer);
       if (q.acceptableAnswers) {
-        return q.acceptableAnswers.some(a => norm(a) === pa);
+        return q.acceptableAnswers.some(a => norm(a) === pa || nospace(a) === paNoSpace);
       }
-      return pa === norm(q.answer);
+      return pa === norm(q.answer) || paNoSpace === nospace(q.answer);
     } else if (q.type === 'fraction' || q.type === 'fractionFigure') {
       const parts = playerAnswer.split('/');
       if (parts.length !== 2) return false;
