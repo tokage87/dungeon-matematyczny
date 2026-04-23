@@ -6340,9 +6340,9 @@ const Battle = {
     const fb = document.getElementById('feedback-text');
     Audio_.miss();
     this.flawless = false;
-    // Track stats
-    if (this.currentQuestion && this.currentQuestion._categoryId) {
-      Stats.record(this.currentQuestion._categoryId, false);
+    const q = this.currentQuestion;
+    if (q && q._categoryId) {
+      Stats.record(q._categoryId, false);
     }
 
     const blockChance = Hero.getShieldBlockChance();
@@ -6362,12 +6362,23 @@ const Battle = {
       setTimeout(() => document.querySelector('.challenge-box').classList.remove('shake'), 400);
     }
 
+    // Show correct answer for input-type questions
+    const showCorrection = q && (q.type === 'german-input' || q.type === 'german-scramble'
+      || q.type === 'text' || q.type === 'number');
+    if (showCorrection) {
+      const correctText = q.fullAnswer || q.answer;
+      const corrEl = document.createElement('div');
+      corrEl.style.cssText = 'font-family:"Press Start 2P",monospace;font-size:9px;color:#88aaff;margin-top:8px;line-height:1.6;text-align:center;';
+      corrEl.innerHTML = `Poprawna odpowiedź:<br><span style="color:#ffffff;font-size:12px;">${correctText}</span>`;
+      fb.appendChild(corrEl);
+    }
+
     if (Game.player.hp <= 0) {
-      setTimeout(() => Game.gameOver(), 800);
+      setTimeout(() => Game.gameOver(), showCorrection ? 2500 : 800);
       return;
     }
 
-    setTimeout(() => this.showAttackChoice(), 1000);
+    setTimeout(() => this.showAttackChoice(), showCorrection ? 2500 : 1000);
   },
 
   checkAnswer(playerAnswer, q) {
